@@ -33,3 +33,18 @@ Navigate to the Next.js frontend directory:
 cd frontend        
 npm install
 ```
+## Development
+### Running in parallel
+```
+1. Start the frontend development server:
+
+cd frontend    
+npm run dev
+
+2. Start the Laravel backend server:
+
+cd backend   
+sudo ./vendor/bin/sail up
+
+uz windows atveriet vscode vai jebkuru terminali izmantojat kaa admin:
+./vendor/bin/sail up
