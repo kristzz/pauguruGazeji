@@ -7,7 +7,7 @@
 - mySQL
 Color s:
 wait #f7fcf7
-blu #f7fcf7
+blu #0e416b
 redele #d14945
 
 FONT: Space Grotesk
