@@ -9,7 +9,15 @@ export default function Home() {
       <h2 className="bg-main-blue">blue</h2>
       <h2 className="bg-main-white">white</h2>
       <h2 className="bg-main-red">red</h2> */}
-      
+
+      <div className="bg-main-red w-28 h-20"></div>
+      <div className="bg-main-red w-28 h-20"></div>
+      <div className="bg-main-red w-28 h-20"></div>
+      <div className="bg-main-blue w-28 h-20"></div>
+      <div className="bg-main-blue w-28 h-20"></div>
+      <div className="bg-main-blue w-28 h-20"></div>
+
+
       <div className="flex flex-col items-center h-screen">
         <h1 className="text-main-blue text-2xl text-center w-52 mt-16 mb-44" >Start your learning journey today!</h1>
         <button className="bg-main-blue text-main-white text-lg rounded-lg h-12 w-40 my-4">Register</button>
