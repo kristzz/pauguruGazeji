@@ -22,7 +22,7 @@ export default function Home() {
           <div className="absolute bg-main-blue w-16 h-36 rounded-e-xl left-0 top-52
                           sm:w-20 sm:h-64
                           xl:top-40"></div>
-          <div className="absolute bg-main-red w-12 h-32 rounded-e-xl left-0 bottom-36
+          <div className="absolute bg-main-red w-8 h-32 rounded-e-xl left-0 bottom-36
                           sm:w-16 sm:h-40 sm:bottom-44
                           xl:bottom-32"></div>
           <div className="absolute bg-main-blue w-40 h-16 rounded-tr-xl bottom-0 left-0
