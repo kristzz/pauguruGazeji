@@ -1,4 +1,39 @@
+"use client"; 
+
+import { useState } from "react";
+import axios from "axios";
+
 export default function Register() {
+    const [formData, setFormData] = useState({
+        email: '',
+        password: '',
+        confirmPassword: ''
+    });
+
+    const handleChange = (e) => {
+        setFormData({
+            ...formData,
+            [e.target.name]: e.target.value
+        });
+    };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        if (formData.password !== formData.confirmPassword) {
+            alert('Passwords do not match');
+            return;
+        }
+
+        try {
+            const response = await axios.post('http://127.0.0.1:8000/api/register', formData);
+            console.log(response.data);
+            alert('Registration successful');
+        } catch (error) {
+            console.error(error);
+            alert('Registration failed');
+        }
+    }
+    
     return(
 
         <main>

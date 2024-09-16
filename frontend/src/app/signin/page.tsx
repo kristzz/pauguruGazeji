@@ -1,6 +1,58 @@
+"use client";
+
+import { useState } from "react";
+import axios from "axios";
 import Link from "next/link";
 
 export default function Signin() {
+    
+    const [formData, setFormData] = useState({
+        email: '',
+        password: ''
+    });
+    const [loading, setLoading] = useState(false);
+    const [successMessage, setSuccessMessage] = useState('');
+    const [errorMessage, setErrorMessage] = useState('');
+
+    const handleChange = (e) => {
+        setFormData({
+            ...formData,
+            [e.target.name]: e.target.value
+        });
+    };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setLoading(true);
+        setErrorMessage('');
+        setSuccessMessage('');
+
+        try {
+            const response = await axios.post('http://127.0.0.1:8000/api/login', {
+                email: formData.email,
+                password: formData.password,
+            });
+
+            // Retrieve the token and role from the response
+            const userToken = response.data.token;
+            const userRole = response.data.role;
+
+            // Store the token in localStorage or sessionStorage
+            localStorage.setItem('userToken', userToken);
+
+            // Optionally, store the role if needed later
+            localStorage.setItem('userRole', userRole);
+
+            // Show success message
+            setSuccessMessage('Login successful! Token has been stored.');
+        } catch (error) {
+            console.error(error);
+            setErrorMessage('Login failed. Please check your credentials and try again.');
+        } finally {
+            setLoading(false);
+        }
+    };
+
     return(
 
         <main>
