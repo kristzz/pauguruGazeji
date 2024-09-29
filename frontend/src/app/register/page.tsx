@@ -21,7 +21,7 @@ export default function Register() {
     }
 
     try {
-      const response = await api.post('/api/register', {
+      const response = await api.post('http://127.0.0.1:8000/api/register', {
         email,
         password
       });

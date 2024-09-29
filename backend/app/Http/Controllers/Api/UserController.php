@@ -15,14 +15,12 @@ class UserController extends Controller
 
         // Data validation
         $request->validate([
-            "name" => "required",
             "email" => "required|email|unique:users",
             "password" => "required|confirmed"
         ]);
 
         // Create User
         User::create([
-            "name" => $request->name,
             "email" => $request->email,
             "password" => Hash::make($request->password),
             "role" => "user" 
