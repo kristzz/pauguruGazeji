@@ -11,3 +11,10 @@
   body {
     font-family: var(--font-space-grotesk);
   }
+
+  option {
+    background-color: #f7fcf7; /* Light grey background */
+    font-family: 'Space Grotesk', sans-serif; /* Same font as select */
+  }
+
+  

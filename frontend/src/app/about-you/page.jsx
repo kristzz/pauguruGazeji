@@ -2,6 +2,7 @@
 import React from "react";
 
 import { useState } from "react";
+import {Input} from "@nextui-org/input";
 
 export default function Home() {
   const [selectedValue, setSelectedValue] = useState("primary");
@@ -38,11 +39,25 @@ export default function Home() {
           <div className="absolute bg-main-red w-32 h-24 rounded-tl-xl bottom-0 right-0
                           sm:w-40 sm:h-32"></div>
         </div>
-      <div>
-        
+      <div classname="flex flex-col items-center">
+        <p className="text-main-blue text-2xl  text-center mt-8">Your information</p>
+        <form className="flex flex-col items-center">
+          <input type="text" placeholder="Name" className="px-2 py-1 border-2 border-main-blue rounded-lg mt-4"/>
+          <input type="text" placeholder="Surname" className="px-2 py-1 border-2 border-main-blue rounded-lg mt-2"/>
+          <div className="flex flex-row w-full">
+            <input type="number" placeholder="Age" className="px-2 py-1 border-2 border-main-blue rounded-lg mt-2 mr-2 w-20"/>
+            <select placeholder="Gender" className="px-2 py-1 border-2 border-main-blue rounded-lg mt-2 w-full bg-main-white">
+              <option>Male</option>
+              <option>Female</option>
+              <option>Other</option>
+            </select>
+          </div>
+          
+
+        </form>
       </div>
 
-      <div className="flex flex-col items-center hidden">  
+      <div className="flex flex-col items-center ">  
       <p className="text-main-blue text-2xl w-52 text-center mt-8">
         Specify the subjects you want to study
       </p>
@@ -65,7 +80,7 @@ export default function Home() {
       <button className="bg-main-red text-main-white w-40 h-12 rounded-lg mt-16 text-lg">Next</button>
       </div>
       
-      <div className="flex flex-col items-center hidden">
+      <div className="flex flex-col items-center ">
       <p className="text-main-blue text-2xl w-52 text-center mt-8">
         What is your education level?
       </p>
