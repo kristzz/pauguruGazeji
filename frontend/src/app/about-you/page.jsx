@@ -1,7 +1,25 @@
+"use client";
 import React from "react";
 
+import { useState } from "react";
+
 export default function Home() {
+  const [selectedValue, setSelectedValue] = useState("primary");
+  const [isOpen, setIsOpen] = useState(false); 
+
+  const options = [
+    { value: "primary", label: "Primary education" },
+    { value: "secondary", label: "Secondary education" },
+    { value: "highschool", label: "Highschool education" },
+    { value: "college", label: "College education" },
+  ];
+
+  const handleOptionClick = (value) => {
+    setSelectedValue(value);
+    setIsOpen(false); 
+  };
   return (
+    
     <div className="flex flex-col items-center">
       <div className="flex flex-row">
           <div className=" bg-main-red w-60 h-16 rounded-b-xl z-0
@@ -20,6 +38,10 @@ export default function Home() {
           <div className="absolute bg-main-red w-32 h-24 rounded-tl-xl bottom-0 right-0
                           sm:w-40 sm:h-32"></div>
         </div>
+      <div>
+        
+      </div>
+
       <div className="flex flex-col items-center hidden">  
       <p className="text-main-blue text-2xl w-52 text-center mt-8">
         Specify the subjects you want to study
@@ -43,11 +65,34 @@ export default function Home() {
       <button className="bg-main-red text-main-white w-40 h-12 rounded-lg mt-16 text-lg">Next</button>
       </div>
       
-      <div className="">
+      <div className="flex flex-col items-center hidden">
       <p className="text-main-blue text-2xl w-52 text-center mt-8">
         What is your education level?
       </p>
+      <div className="relative inline-block ">
+      <div
+        className="h-8 px-4 pt-1 bg-white border border-main-blue rounded-lg font-grotesk text-main-blue cursor-pointer mt-12 text-center"
+        onClick={() => setIsOpen(!isOpen)} 
+      >
+        {options.find((option) => option.value === selectedValue)?.label}
       </div>
+
+      {isOpen && (
+        <ul className="absolute w-full bg-white border border-main-blue text-main-blue rounded-lg mt-1 z-10 text-center">
+          {options.map((option) => (
+            <li
+              key={option.value}
+              className="py-2 cursor-pointer hover:bg-gray-100 text-center"
+              onClick={() => handleOptionClick(option.value)} 
+            >
+              {option.label}
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
+      <button className="bg-main-red text-main-white w-40 h-12 rounded-lg mt-64 text-lg">Next</button>
+    </div>
     </div>
   );
 }
@@ -60,3 +105,8 @@ function SubjectButton({ label }) {
     </button>
   );
 }
+
+
+
+  
+
