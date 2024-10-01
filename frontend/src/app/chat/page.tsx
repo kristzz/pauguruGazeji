@@ -2,8 +2,8 @@ export default function Chat() {
     return (
         <main id="logs" className="bg-main-red h-screen w-screen flex flex-col items-center justify-center">
             
-            <div id="back-area" className="bg-main-blue text-white h-[10%] w-[100%] flex border-b-[5px] border-black">
-                <a href="/messages" id='back-poga' className="bg-white h-[80%] w-[10%] flex ml-[5%] mt-[1%] cursor-pointer items-center justify-center">
+            <div id="back-area" className="bg-white text-white h-[10%] w-[100%] flex border-b-[5px] border-black">
+                <a href="/messages" id='back-poga' className="bg-white h-[80%] w-[10%] flex ml-[5%] mt-[0.5%] cursor-pointer items-center justify-center border-black border-1px">
                     <svg fill="#000000" height="40px" width="40px" viewBox="0 0 26.676 26.676">
                         <g>
                             <path d="M26.105,21.891c-0.229,0-0.439-0.131-0.529-0.346l0,0c-0.066-0.156-1.716-3.857-7.885-4.59
@@ -18,16 +18,17 @@ export default function Chat() {
 
             <div id="swipe-logs" className="bg-white h-[80%] w-[100%] flex items-center justify-center">
             </div>
+ 
+            <div id="pogu-area" className="bg-white text-white h-[10%] w-[100%] flex border-t-[5px] border-black">
+    <div id='chat-bar' className="bg-white h-[60%] w-[90%] flex justify-center items-center ml-[5%] mt-[1%] rounded-lg border-[1px] border-black">
+        <input 
+            type="text" 
+            className="w-full h-full bg-transparent text-left text-black outline-none px-2" 
+            placeholder="Type a message..." 
+        />
+    </div>
+</div>
 
-            <div id="pogu-area" className="bg-main-blue text-white h-[10%] w-[100%] flex border-t-[5px] border-black">
-                <div id='chat-bar' className="bg-main-red h-[60%] w-[90%] flex justify-center items-center ml-[5%] mt-[2%] rounded-lg">
-                    <input 
-                        type="text" 
-                        className="w-full h-full bg-transparent text-left text-white outline-none px-2" 
-                        placeholder="Type a message..." 
-                    />
-                </div>
-           </div>
 
         </main>
     );
