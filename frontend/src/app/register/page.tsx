@@ -1,5 +1,3 @@
-// app/register/page.tsx
-
 'use client'; // Enable client-side functionality
 
 import React, { useState } from 'react';
@@ -23,7 +21,8 @@ export default function Register() {
     try {
       const response = await api.post('http://127.0.0.1:8000/api/register', {
         email,
-        password
+        password,
+        password_confirmation: confirmPassword, // Pass password confirmation
       });
       console.log('Registration successful:', response.data);
       // Optionally reset form or show success message
