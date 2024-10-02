@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import Link from "next/link";
-import api from '../axios'; // Import your Axios instance
+import api from '../axios'; 
 
 export default function Signin() {
   const [email, setEmail] = useState('');
@@ -18,8 +18,6 @@ export default function Signin() {
         password,
       });
       console.log('Login successful:', response.data);
-
-      // Store the userToken in localStorage
       localStorage.setItem('userToken', response.data.token);
 
       // Optionally redirect the user to a different page after login

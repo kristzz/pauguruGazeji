@@ -82,6 +82,8 @@ export default function Register() {
               <button className="bg-main-red text-main-white text-lg rounded-lg h-12 w-64">
                 Register
               </button>
+              
+
             </div>
           </form>
         </div>
