@@ -1,12 +1,39 @@
 "use client";
 import React from "react";
-
-import { useState } from "react";
-import {Input} from "@nextui-org/input";
+import { useEffect } from "react";
 
 export default function Home() {
+
+  useEffect(() => {
+    let currentSection = 1;
+    const totalSections = 3;
+
+    const cycleButton = document.getElementById("cycleButton");
+
+    if (cycleButton) {
+      cycleButton.addEventListener("click", nextSection);
+    }
+
+    function nextSection() {
+      document.getElementById(`section${currentSection}`).classList.add("hidden");
+
+      currentSection++;
+
+      if (currentSection > totalSections) {
+        window.location.href = "/"; 
+      } else {
+        document.getElementById(`section${currentSection}`).classList.remove("hidden");
+      }
+    }
+
+    return () => {
+      if (cycleButton) {
+        cycleButton.removeEventListener("click", nextSection);
+      }
+    };
+  }, []);
+
   return (
-    
     <div className="flex flex-col items-center">
       <div className="flex flex-row">
         <div className=" bg-main-red w-60 h-16 rounded-b-xl z-0
@@ -25,7 +52,8 @@ export default function Home() {
         <div className="absolute bg-main-red w-32 h-24 rounded-tl-xl bottom-0 right-0
                         sm:w-40 sm:h-32"></div>
       </div>
-      <div classname="flex flex-col items-center">
+
+      <div id="section1" classname="flex flex-col items-center">
         <p className="text-main-blue text-2xl  text-center mt-8">Your information</p>
         <form className="flex flex-col items-center">
           <input type="text" placeholder="Name" className="px-2 py-1 border-2 border-main-blue rounded-lg mt-4"/>
@@ -40,11 +68,11 @@ export default function Home() {
             </select>
           </div>
           
-          <button className="bg-main-red text-main-white w-40 h-12 rounded-lg mt-48 text-lg">Next</button>
+          
         </form>
       </div>
 
-      <div className="flex flex-col items-center ">  
+      <div id="section2" className="flex flex-col items-center hidden">  
         <p className="text-main-blue text-2xl w-52 text-center mt-8">
           Specify the subjects you want to study
         </p>
@@ -64,10 +92,10 @@ export default function Home() {
           <SubjectButton label="Sports" />
           <SubjectButton label="Business" />
         </div>
-        <button className="bg-main-red text-main-white w-40 h-12 rounded-lg mt-16 text-lg">Next</button>
+        
       </div>
       
-      <div className="flex flex-col items-center ">
+      <div id="section3" className="flex flex-col items-center hidden">
         <p className="text-main-blue text-2xl w-52 text-center mt-8">
           What is your education level?
         </p>
@@ -79,10 +107,23 @@ export default function Home() {
           <option>Highschool</option>
           <option>College</option>
         </select>
-        <button className="bg-main-red text-main-white w-40 h-12 rounded-lg mt-64 text-lg">Next</button>
+       
       </div>
+      
     </div>
+
+
+    <div class="flex flex-col items-center">
+      <button id="cycleButton" class="bg-main-red text-main-white w-40 h-12 rounded-lg mt-16 text-lg">Next</button>
     </div>
+
+    <script>
+     
+      
+    </script>
+    </div>
+
+
   );
 }
 
@@ -94,6 +135,10 @@ function SubjectButton({ label }) {
     </button>
   );
 }
+
+
+
+
 
 
 
