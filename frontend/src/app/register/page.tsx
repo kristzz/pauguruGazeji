@@ -24,6 +24,7 @@ export default function Register() {
       const response = await api.post('http://127.0.0.1:8000/api/register', {
         email,
         password,
+        password_confirmation: confirmPassword,
       });
       console.log('Registration successful:', response.data);
       // Optionally reset form or show success message
