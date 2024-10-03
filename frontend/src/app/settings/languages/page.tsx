@@ -1,7 +1,9 @@
 export default function Settings() {
     return (
       <main>
-        <p>Languages</p>
+        <h3>Language support</h3>
+
+        <p>Language support to be added</p>
       </main>
     );
 }
