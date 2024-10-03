@@ -15,8 +15,8 @@ export default function Settings() {
         
         <div className="flex">
           <SubscriptionCard name="Monthly" price="$9.99" text="billed once a month" />
-          <SubscriptionCard name="Yearly" price="$99.99" text="annually" />
-          <SubscriptionCard name="Lifetime" price="$249.99" text="once in a lifetime" />
+          <SubscriptionCard name="Yearly" price="$99.99" text="billed annually" />
+          <SubscriptionCard name="Lifetime" price="$249.99" text="billed once in a lifetime" />
         </div>
       </main>
     );

@@ -5,7 +5,7 @@ import { ReactNode } from 'react';
 
 export default function SettingsLayout({ children }: { children: ReactNode }) {
   return (
-    <div className="flex w-full">
+    <div className="flex w-full bg-main-white">
       {/* Sidebar with buttons */}
       <aside className="w-64 p-8">
         <ul>
