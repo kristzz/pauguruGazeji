@@ -33,46 +33,45 @@ class AuthController extends Controller
     }
 
     // Login API (POST)
-    public function login(Request $request) {
+    public function login(Request $request){
+
+        // Data validation
         $request->validate([
-            'email' => 'required|email',
-            'password' => 'required',
+            "email" => "required|email",
+            "password" => "required"
         ]);
-    
-        if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
+
+        // User login check
+        if(Auth::attempt([
+            "email" => $request->email,
+            "password" => $request->password
+        ])){
+
+            // User exists
             $user = Auth::user();
-            $token = $user->createToken('YourAppName')->accessToken;
-    
+
+            $token = $user->createToken("userToken")->accessToken;
+
             return response()->json([
                 "status" => true,
-                "message" => "Login successful",
-                "data" => [
-                    'user' => $user,
-                    'token' => $token,
-                ],
+                "message" => "User logged in successfully",
+                "token" => $token,
+                "role" => $user->role // Include user role in the response
             ]);
-        }
-    
-        return response()->json([
-            "status" => false,
-            "message" => "Unauthenticated",
-            "data" => null,
-        ], 401);
-    }
-    
-
-    // Profile API (GET)
-    public function profile() {
-        if (!Auth::check()) {
+        }else{
             return response()->json([
                 "status" => false,
-                "message" => "Unauthenticated",
-                "data" => null
-            ], 401);
+                "message" => "Invalid login details"
+            ]);
         }
-    
+
+    }
+
+    // Profile API (GET)
+    public function profile(){
+
         $user = Auth::user();
-    
+
         return response()->json([
             "status" => true,
             "message" => "Profile information",
