@@ -26,7 +26,8 @@ export default function Profile() {
 
         fetchProfile();
     }, []);
-
+    
+    
     return (
         <main>
             <div className="bg-main-red h-screen w-screen flex flex-col items-center relative">
