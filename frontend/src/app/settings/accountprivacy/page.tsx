@@ -1,7 +1,13 @@
 export default function Settings() {
     return (
       <main>
-        <p>Account privacy</p>
+        <h3>Profile Visibility</h3>
+
+        <p>Who can see your profile?</p>
+        <select>
+          <option>Public</option>
+          <option>Private</option>
+        </select>
       </main>
     );
 }
