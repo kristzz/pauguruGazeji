@@ -33,45 +33,46 @@ class AuthController extends Controller
     }
 
     // Login API (POST)
-    public function login(Request $request){
-
-        // Data validation
+    public function login(Request $request) {
         $request->validate([
-            "email" => "required|email",
-            "password" => "required"
+            'email' => 'required|email',
+            'password' => 'required',
         ]);
-
-        // User login check
-        if(Auth::attempt([
-            "email" => $request->email,
-            "password" => $request->password
-        ])){
-
-            // User exists
+    
+        if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
             $user = Auth::user();
-
-            $token = $user->createToken("userToken")->accessToken;
-
+            $token = $user->createToken('YourAppName')->accessToken;
+    
             return response()->json([
                 "status" => true,
-                "message" => "User logged in successfully",
-                "token" => $token,
-                "role" => $user->role // Include user role in the response
-            ]);
-        }else{
-            return response()->json([
-                "status" => false,
-                "message" => "Invalid login details"
+                "message" => "Login successful",
+                "data" => [
+                    'user' => $user,
+                    'token' => $token,
+                ],
             ]);
         }
-
+    
+        return response()->json([
+            "status" => false,
+            "message" => "Unauthenticated",
+            "data" => null,
+        ], 401);
     }
+    
 
     // Profile API (GET)
-    public function profile(){
-
+    public function profile() {
+        if (!Auth::check()) {
+            return response()->json([
+                "status" => false,
+                "message" => "Unauthenticated",
+                "data" => null
+            ], 401);
+        }
+    
         $user = Auth::user();
-        
+    
         return response()->json([
             "status" => true,
             "message" => "Profile information",
