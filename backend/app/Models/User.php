@@ -10,7 +10,7 @@ use Laravel\Passport\HasApiTokens;
 
 class User extends Authenticatable implements CanResetPassword
 {
-    use HasFactory, HasApiTokens;
+    use HasFactory, HasApiTokens, Notifiable;
 
     /**
      * The attributes that are mass assignable.
@@ -44,4 +44,10 @@ class User extends Authenticatable implements CanResetPassword
     {
         return $this->hasMany(Message::class);
     }
+
+    public function sendPasswordResetNotification($token)
+    {
+    $this->notify(new \App\Notifications\ResetPasswordNotification($token));
+    }
+
 }

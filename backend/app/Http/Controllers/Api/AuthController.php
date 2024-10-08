@@ -7,6 +7,9 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Contracts\Auth\CanResetPassword;
+use Illuminate\Support\Facades\Password;
+
 
 class AuthController extends Controller
 {
@@ -145,5 +148,19 @@ class AuthController extends Controller
     $user = User::findOrFail($id);
     $user->delete();
     return response()->json(['message' => 'User deleted successfully!'], 200);
+    }
+
+    public function sendResetLinkEmail(Request $request)
+    {
+        // Validate the email
+        $request->validate(['email' => 'required|email']);
+
+        // Send the password reset link
+        $response = Password::sendResetLink($request->only('email'));
+
+        // Return response
+        return $response == Password::RESET_LINK_SENT
+            ? response()->json(['message' => 'Password reset link sent.'])
+            : response()->json(['message' => 'Failed to send reset link.'], 400);
     }
 }
