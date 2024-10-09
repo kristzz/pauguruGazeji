@@ -43,8 +43,8 @@ class ResetPasswordNotification extends Notification
      */
     public function toMail($notifiable)
     {
-        $resetUrl = url("http://localhost:3000/passwordreset?{$this->token}?email={$notifiable->email}");
-
+        $resetUrl = url("http://localhost:3000/passwordreset?token={$this->token}&email={$notifiable->email}");
+    
         return (new MailMessage)
             ->subject('Reset Your Password')
             ->line('Click the button below to reset your password.')

@@ -1,28 +1,29 @@
 'use client';
 
-import { useSearchParams } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 
 export default function ResetPassword() {
-  const searchParams = useSearchParams();
-
-  // Initialize token and email from query params
   const [email, setEmail] = useState('');
-  const [token, setToken] = useState('');
-
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [message, setMessage] = useState('');
+  const [token, setToken] = useState('');
 
-  // Use useEffect to set the email and token from searchParams once available
+
   useEffect(() => {
-    const tokenParam = searchParams.get('token');
-    const emailParam = searchParams.get('email');
+    // Retrieve token and email from the query parameters in the URL
+    const queryParams = new URLSearchParams(window.location.search);
+    const tokenFromUrl = queryParams.get('token');
+    const emailFromUrl = queryParams.get('email');
 
-    if (tokenParam) setToken(tokenParam);
-    if (emailParam) setEmail(emailParam);
-  }, [searchParams]);
+    if (tokenFromUrl) {
+      setToken(tokenFromUrl);  // Set token
+    }
+    if (emailFromUrl) {
+      setEmail(emailFromUrl);  // Prefill email
+    }
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -35,10 +36,10 @@ export default function ResetPassword() {
     try {
       // Make the API request to reset the password
       await axios.post('http://127.0.0.1:8000/api/reset-password', {
-        email, // Email from state
+        email,
         password,
         password_confirmation: confirmPassword,
-        token, // Token from state
+        token,  // Include token in the request
       });
       setMessage('Password reset successfully');
     } catch (error) {
@@ -51,6 +52,7 @@ export default function ResetPassword() {
       <div className="bg-main-red h-screen w-screen flex justify-center items-center">
         <div>
           <form className="flex flex-col items-center" onSubmit={handleSubmit}>
+            
             <input
               className="h-12 w-64 mb-4 rounded-lg p-4"
               type="email"
@@ -58,19 +60,10 @@ export default function ResetPassword() {
               name="email"
               placeholder="Enter your email"
               value={email}
-              onChange={(e) => setEmail(e.target.value)} // Allow input in email field
+              onChange={(e) => setEmail(e.target.value)}
               required
             />
-            <input
-              className="h-12 w-64 mb-4 rounded-lg p-4"
-              type="text"
-              id="token"
-              name="token"
-              placeholder="Enter your reset token"
-              value={token}
-              onChange={(e) => setToken(e.target.value)} // Allow input in token field
-              required
-            />
+
             <input
               className="h-12 w-64 mb-4 rounded-lg p-4"
               type="password"
@@ -81,6 +74,7 @@ export default function ResetPassword() {
               onChange={(e) => setPassword(e.target.value)}
               required
             />
+
             <input
               className="h-12 w-64 mb-4 rounded-lg p-4"
               type="password"
@@ -91,11 +85,13 @@ export default function ResetPassword() {
               onChange={(e) => setConfirmPassword(e.target.value)}
               required
             />
+
             <div className="flex items-center mt-8">
               <button className="bg-main-blue text-main-white text-lg rounded-lg h-12 w-64">
                 Reset Password
               </button>
             </div>
+
             {message && <p className="mt-4">{message}</p>}
           </form>
         </div>
