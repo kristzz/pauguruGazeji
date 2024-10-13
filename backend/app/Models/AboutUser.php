@@ -16,6 +16,7 @@ class AboutUser extends Model
      */
     protected $fillable = [
         'user_id',
+        'subjects',
         'level_of_education',
         'points',
     ];
@@ -31,4 +32,5 @@ class AboutUser extends Model
     {
         return $this->belongsToMany(Subject::class, 'about_user_subject');
     }
+    
 }

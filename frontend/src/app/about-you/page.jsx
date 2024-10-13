@@ -1,86 +1,15 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React from "react";
+import { useEffect } from "react";
+import { useRouter } from 'next/navigation';
 
-export default function AboutYou() {
-  const [name, setName] = useState("");
-  const [surname, setSurname] = useState("");
-  const [age, setAge] = useState("");
-  const [gender, setGender] = useState("");
-  const [subjects, setSubjects] = useState([]);
-  const [education, setEducation] = useState("");
-
-  useEffect(() => {
-    let currentSection = 1;
-    const totalSections = 3;
-    const cycleButton = document.getElementById("cycleButton");
-
-    if (cycleButton) {
-      cycleButton.addEventListener("click", nextSection);
-    }
-
-    function nextSection() {
-      
-
-      document.getElementById(`section${currentSection}`).classList.add("hidden");
-      currentSection++;
-
-      if (currentSection > totalSections) {
-        
-        handleSubmit();
-
-      } else {
-        document.getElementById(`section${currentSection}`).classList.remove("hidden");
-      }
-    }
-
-    return () => {
-      if (cycleButton) {
-        cycleButton.removeEventListener("click", nextSection);
-      }
-    };
-  }, [name, surname, age, gender, subjects, education]);
-
-  const handleSubmit = () => {
-    const formData = {
-      name,
-      surname,
-      age,
-      gender,
-      subjects,
-      education,
-    };
-
-    // Use fetch or axios to send the data to the backend
-    fetch("http://127.0.0.1:8000/api/about-you", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(formData),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        console.log("Success:", data);
-        window.location.href = "/"; // Redirect after success
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-      });
-  };
-
-  const handleSubjectToggle = (subject) => {
-    setSubjects((prevSubjects) => {
-      if (prevSubjects.includes(subject)) {
-        return prevSubjects.filter((s) => s !== subject); // Remove if already selected
-      }
-      return [...prevSubjects, subject]; // Add if not selected
-    });
-  };
-
+export default function Home() {
+  const router = useRouter()
   return (
+    <div>
     <div className="flex flex-col items-center">
       <div className="flex flex-row">
-      <div className=" bg-main-red w-60 h-16 rounded-b-xl z-0
+        <div className=" bg-main-red w-60 h-16 rounded-b-xl z-0
                         sm:w-72 sm:h-24
                         xl:w-[600px]"></div>
         <div className="absolute bg-main-blue w-14 h-60 rounded-s-xl right-0 top-64
@@ -97,108 +26,89 @@ export default function AboutYou() {
                         sm:w-40 sm:h-32"></div>
       </div>
 
-      <div id="section1" className="flex flex-col items-center">
-        <p className="text-main-blue text-2xl text-center mt-8">Your information</p>
+      <div id="section1" classname="flex flex-col items-center">
+        <p className="text-main-blue text-2xl  text-center mt-8">Your information</p>
         <form className="flex flex-col items-center">
-          <input
-            type="text"
-            placeholder="Name"
-            className="px-2 py-1 border-2 border-main-blue rounded-lg mt-4"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            required
-          />
-          <input
-            type="text"
-            placeholder="Surname"
-            className="px-2 py-1 border-2 border-main-blue rounded-lg mt-2"
-            value={surname}
-            onChange={(e) => setSurname(e.target.value)}
-            required
-          />
+          <input type="text" placeholder="Name" className="px-2 py-1 border-2 border-main-blue rounded-lg mt-4"/>
+          <input type="text" placeholder="Surname" className="px-2 py-1 border-2 border-main-blue rounded-lg mt-2"/>
           <div className="flex flex-row w-full">
-            <input
-              type="number"
-              placeholder="Age"
-              min="0"
-              max="116"
-              className="px-2 py-1 border-2 border-main-blue rounded-lg mt-2 mr-2 w-20"
-              value={age}
-              onChange={(e) => setAge(e.target.value)}
-              required
-            />
-            <select
-              placeholder="Gender"
-              className="px-2 py-1 border-2 border-main-blue rounded-lg mt-2 w-full bg-main-white"
-              value={gender}
-              onChange={(e) => setGender(e.target.value)}
-              required
-            >
+            <input type="number" placeholder="Age" min="0" max="116" className="px-2 py-1 border-2 border-main-blue rounded-lg mt-2 mr-2 w-20"/>
+            <select placeholder="Gender" className="px-2 py-1 border-2 border-main-blue rounded-lg mt-2 w-full bg-main-white">
               <option>Gender</option>
               <option>Male</option>
               <option>Female</option>
               <option>Other</option>
             </select>
           </div>
+          
+          
         </form>
       </div>
 
-      <div id="section2" className="flex flex-col items-center hidden">
+      {/* <div id="section2" className="flex flex-col items-center hidden">  
         <p className="text-main-blue text-2xl w-52 text-center mt-8">
           Specify the subjects you want to study
         </p>
         <div className="flex flex-row flex-wrap w-64 mt-4">
-          {["Geometry", "Algebra", "Latvian", "English", "Chemistry", "Biology", "Physics", "Geography", "Art", "History", "Programming", "Literature", "Sports", "Business"].map((subject) => (
-            <SubjectButton key={subject} label={subject} onToggle={handleSubjectToggle} />
-          ))}
+          <SubjectButton label="Geometry" />
+          <SubjectButton label="Algebra" />
+          <SubjectButton label="Latvian" />
+          <SubjectButton label="English" />
+          <SubjectButton label="Chemistry" />
+          <SubjectButton label="Biology" />
+          <SubjectButton label="Physics" />
+          <SubjectButton label="Geography" />
+          <SubjectButton label="Art" />
+          <SubjectButton label="History" />
+          <SubjectButton label="Programming" />
+          <SubjectButton label="Literature" />
+          <SubjectButton label="Sports" />
+          <SubjectButton label="Business" />
         </div>
+        
       </div>
+       */}
 
-      <div id="section3" className="flex flex-col items-center hidden">
+     {/*  <div id="section3" className="flex flex-col items-center hidden">
         <p className="text-main-blue text-2xl w-52 text-center mt-8">
           What is your education level?
         </p>
         <div className="flex flex-col items-center">
-          <select
-            className="px-2 py-1 border-2 border-main-blue rounded-lg mt-2 w-full bg-main-white"
-            value={education}
-            onChange={(e) => setEducation(e.target.value)}
-            required
-          >
-            <option>Education level</option>
-            <option>Primary</option>
-            <option>Secondary</option>
-            <option>Highschool</option>
-            <option>College</option>
-          </select>
-        </div>
+        <select className="px-2 py-1 border-2 border-main-blue rounded-lg mt-2 w-full bg-main-white">
+          <option>Education level</option>
+          <option>Primary</option>
+          <option>Secondary</option>
+          <option>Highschool</option>
+          <option>College</option>
+        </select>
+       
       </div>
-
-      <div className="flex flex-col items-center">
-        <button type="button" id="cycleButton" className="bg-main-red text-main-white w-40 h-12 rounded-lg mt-16 text-lg">
-          Next
-        </button>
-      </div>
+       */}
     </div>
+
+
+    <div class="flex flex-col items-center">
+      <button id="cycleButton" onClick={() => router.push('/about-you/subjects')} className="bg-main-red text-main-white w-40 h-12 rounded-lg mt-16 text-lg">Next</button>
+    </div>
+    </div>
+
+
   );
 }
 
-function SubjectButton({ label, onToggle }) {
-  const [isToggled, setIsToggled] = useState(false);
 
-  const handleToggle = () => {
-    setIsToggled((prevState) => !prevState); // Toggle the state
-    onToggle(label); // Call the parent function to update selected subjects
-  };
-
+/* function SubjectButton({ label }) {
   return (
-    <button
-      className={`border-main-blue border-2 rounded-lg w-auto pr-1 pl-1 m-1 ${
-        isToggled ? "bg-main-blue text-main-white" : "bg-gray-300"
-      }`}
-      onClick={handleToggle}
-    >
+    <button className="bg-gray-300 border-main-blue border-2 rounded-lg w-auto pr-1 pl-1 m-1">
       {label}
     </button>
   );
 }
+ */
+
+
+
+
+
+
+  
