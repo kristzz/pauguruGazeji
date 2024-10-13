@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Tasks;
 
 class AuthController extends Controller
 {
@@ -156,4 +157,6 @@ class AuthController extends Controller
     $user->delete();
     return response()->json(['message' => 'User deleted successfully!'], 200);
     }
+
+
 }   
