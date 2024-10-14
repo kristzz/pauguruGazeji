@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Models\AboutUser;
 use App\Models\Subject;
 use Illuminate\Validation\ValidationException;
 
@@ -37,59 +38,49 @@ class AboutYouController extends Controller
     }
 
     public function aboutYouSubjects(Request $request)
-{
-    // Get the 'subjects' query parameter
-    $subjects = $request->query('subjects');
+    {
+        $validated = $request->validate([
+            'user_id' => 'required|integer|exists:users,id',
+            'subjects' => 'required|array', // Validate that subjects are provided as an array
+            'subjects.*' => 'integer|exists:subjects,id', // Ensure each subject ID exists
+        ]);
 
-    // Check if subjects are provided in the query string
-    if (!$subjects) {
-        return response()->json([
-            "status" => false,
-            "message" => "Subjects parameter is missing."
-        ], 400);
-    }
+        // Find the AboutUser model based on the user_id
+        $aboutuser = AboutUser::where('user_id', $validated['user_id'])->first();
 
-    // Convert the comma-separated string to an array
-    $subjectsArray = explode(',', $subjects);
-
-    // Trim any extra spaces from each subject
-    $subjectsArray = array_map('trim', $subjectsArray);
-
-    // Validate each subject name (optional length check)
-    foreach ($subjectsArray as $subject) {
-        if (strlen($subject) > 255) {
-            return response()->json([
-                "status" => false,
-                "message" => "One of the subjects exceeds the maximum length of 255 characters."
-            ], 400);
+        if (!$aboutuser) {
+            return response()->json(['message' => 'AboutUser not found'], 404);
         }
+
+        // Sync subjects without detaching previous subjects
+        $aboutuser->subjects()->syncWithoutDetaching($validated['subjects']);
+
+        return response()->json(['message' => 'Subjects updated successfully.']);
     }
 
-    // Get the authenticated user's ID
-    $userId = $request->user()->id;
-
-    // Find the AboutUser record for the user
-    $aboutUser = AboutUser::where('user_id', $userId)->firstOrFail();
-
-    // Save the subjects array as a JSON string in the 'subjects' field
-    $aboutUser->update([
-        'subjects' => json_encode($subjectsArray),
-    ]);
-
-    // Return a success response
-    return response()->json([
-        "status" => true,
-        "message" => "Subjects saved successfully",
-        "subjects" => $subjectsArray
-    ]);
-}
-    
-    
-
-    
 
     public function aboutYouEducation(Request $request){
-        
-    }
+        $validated = $request->validate([
+            'user_id' => 'required|integer|exists:users,id',
+            'level_of_education' => 'required|string|max:255'
+        ]);
+    
+        // Find the AboutUser model based on the user_id
+        $aboutuser = AboutUser::where('user_id', $validated['user_id'])->first();
+    
+        if (!$aboutuser) {
+            return response()->json(['message' => 'AboutUser not found'], 404);
+        }
 
+        $aboutuser->update([
+            'level_of_education' => $validated['level_of_education']
+        ]);
+    
+        
+    
+        return response()->json(['message' => 'education updated successfully.']);
+    }
+    
 }
+
+

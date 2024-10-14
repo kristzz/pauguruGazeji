@@ -1,44 +1,55 @@
 "use client";
 import React, { useState } from "react";
-import { useRouter } from 'next/navigation';
+import axios from "axios";
+import { useRouter } from "next/navigation";
 
 export default function Home() {
   const router = useRouter();
   const [selectedSubjects, setSelectedSubjects] = useState([]);
 
-  const handleSubjectToggle = (subject) => {
+  // Assuming these are the subjects and their IDs
+  const subjectsList = [
+    { id: 1, name: "Geometry" },
+    { id: 2, name: "Algebra" },
+    { id: 3, name: "Latvian" },
+    { id: 4, name: "English" },
+    { id: 5, name: "Chemistry" },
+    { id: 6, name: "Biology" },
+    { id: 7, name: "Physics" },
+    { id: 8, name: "Geography" },
+    { id: 9, name: "Art" },
+    { id: 10, name: "History" },
+    { id: 11, name: "Programming" },
+    { id: 12, name: "Literature" },
+    { id: 13, name: "Sports" },
+    { id: 14, name: "Business" },
+  ];
+
+  // Toggle subject selection by ID
+  const handleSubjectToggle = (subjectId) => {
     setSelectedSubjects((prevSelected) => {
-      if (prevSelected.includes(subject)) {
-        return prevSelected.filter((s) => s !== subject); // Remove subject if already selected
+      if (prevSelected.includes(subjectId)) {
+        return prevSelected.filter((id) => id !== subjectId); // Remove if already selected
       } else {
-        return [...prevSelected, subject]; // Add subject if not selected
+        return [...prevSelected, subjectId]; // Add if not selected
       }
     });
   };
 
+  // Submit the selected subject IDs to the backend using Axios
   const handleSubmit = async () => {
     try {
-      const response = await fetch('/api/about-you/subjects', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          subjects: selectedSubjects,
-          // Include any additional fields needed, such as user ID
-        }),
+      const response = await axios.post('/api/about-you/subjects', {
+        subjects: selectedSubjects,
+        user_id: 1, // Replace this with actual user ID or dynamically pass it
       });
 
-      if (response.ok) {
+      if (response.status === 200) {
         // Handle successful submission
         router.push('/about-you/education');
-      } else {
-        // Handle errors
-        const errorData = await response.json();
-        console.error(errorData.message);
       }
     } catch (error) {
-      console.error('Error submitting subjects:', error);
+      console.error('Error submitting subjects:', error.response?.data?.message || error.message);
     }
   };
 
@@ -53,17 +64,18 @@ export default function Home() {
           <div className="absolute bg-main-blue w-40 h-16 rounded-tr-xl bottom-0 left-0 sm:w-48 sm:h-20"></div>
           <div className="absolute bg-main-red w-32 h-24 rounded-tl-xl bottom-0 right-0 sm:w-40 sm:h-32"></div>
         </div>
-        <div id="section2" className="flex flex-col items-center">  
+
+        <div id="section2" className="flex flex-col items-center">
           <p className="text-main-blue text-2xl w-52 text-center mt-8">
             Specify the subjects you want to study
           </p>
           <div className="flex flex-row flex-wrap w-64 mt-4">
-            {["Geometry", "Algebra", "Latvian", "English", "Chemistry", "Biology", "Physics", "Geography", "Art", "History", "Programming", "Literature", "Sports", "Business"].map(subject => (
+            {subjectsList.map(subject => (
               <SubjectButton
-                key={subject}
-                label={subject}
-                isSelected={selectedSubjects.includes(subject)}
-                onToggle={() => handleSubjectToggle(subject)}
+                key={subject.id}
+                label={subject.name}
+                isSelected={selectedSubjects.includes(subject.id)}
+                onToggle={() => handleSubjectToggle(subject.id)}
               />
             ))}
           </div>
