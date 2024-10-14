@@ -1,6 +1,7 @@
 'use client';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
+import Head from 'next/head';
 
 export default function Tasks() {
     const [tasks, setTasks] = useState([]);
@@ -45,10 +46,10 @@ export default function Tasks() {
         if (touchStart !== null && touchEnd !== null) {
             const distance = touchEnd - touchStart;
 
-            if (distance > 50) {
+            if (distance > 150) {
                 console.log("Task has been selected");
                 changeTask();
-            } else if (distance < -50) {
+            } else if (distance < -150) {
                 if (tasks.length > 0) {
                     setCurrentIndex((prevIndex) => (prevIndex + 1) % tasks.length);
                 }
@@ -63,11 +64,10 @@ export default function Tasks() {
     const currentTask = tasks.length > 0 ? tasks[currentIndex] : null;
 
     return (
-        <main>
-            <div className="bg-main-red h-screen w-screen flex flex-col items-center relative">
-                <div className="bg-main-blue w-screen h-[50%] absolute inset-x-0 bottom-0"></div>
+        <main className=' bg-main-blue overflow-hidden h-screen w-screen absolute'>
+            <div className="bg-main-red h-screen w-screen flex flex-col items-center absolute overflow-hidden">
                 <div 
-                    className="bg-main-white w-[65%] h-[50%] shadow-2xl relative top-[20%] rounded-lg align-center border-2"
+                    className="bg-main-white w-[65%] h-[50%] shadow-2xl absolute top-[20%] rounded-lg align-center border-2"
                     onTouchStart={handleTouchStart}
                     onTouchMove={handleTouchMove}
                     onTouchEnd={handleTouchEnd}
