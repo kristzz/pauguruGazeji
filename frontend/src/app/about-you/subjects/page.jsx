@@ -1,11 +1,14 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 
 export default function Home() {
   const router = useRouter();
   const [selectedSubjects, setSelectedSubjects] = useState([]);
+  const [error, setError] = useState(null); // For error handling
+  const [success, setSuccess] = useState(null); // For success messages
+  const [profile, setProfile] = useState("");
 
   // Assuming these are the subjects and their IDs
   const subjectsList = [
@@ -36,19 +39,52 @@ export default function Home() {
     });
   };
 
+  useEffect(() => {
+    const fetchProfile = async () => {
+        try {
+          
+          const token = localStorage.getItem("userToken");
+          if (token) {
+              const response = await axios.get('http://127.0.0.1:8000/api/profile', {
+                  headers: {
+                      Authorization: `Bearer ${token}`
+                  }
+              });
+              setProfile(response.data.data); 
+          } else {
+              console.error("User is not authenticated.");
+          }
+        } catch (error) {
+            console.error("Error fetching profile:", error);
+        }
+    };
+
+    fetchProfile();
+}, []);
+
   // Submit the selected subject IDs to the backend using Axios
   const handleSubmit = async () => {
+    const token = localStorage.getItem("userToken"); // Get the token from localStorage
+    const userId = profile.id;
+    console.log('Submitting subjects for user ID:', userId);
     try {
-      const response = await axios.post('/api/about-you/subjects', {
+      const response = await axios.post('http://127.0.0.1:8000/api/about-you/subjects', {
         subjects: selectedSubjects,
-        user_id: 1, // Replace this with actual user ID or dynamically pass it
+        user_id: userId,
+      }, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
       });
 
+      
       if (response.status === 200) {
-        // Handle successful submission
-        router.push('/about-you/education');
+        setSuccess("Subjects submitted successfully!"); // Success message
+        router.push('/');
       }
     } catch (error) {
+      setError(error.response?.data?.message || "Error submitting subjects."); // Handle error
       console.error('Error submitting subjects:', error.response?.data?.message || error.message);
     }
   };
@@ -91,6 +127,10 @@ export default function Home() {
           Next
         </button>
       </div>
+
+      {/* Display error or success messages */}
+      {error && <p className="text-red-500">{error}</p>}
+      {success && <p className="text-green-500">{success}</p>}
     </div>
   );
 }

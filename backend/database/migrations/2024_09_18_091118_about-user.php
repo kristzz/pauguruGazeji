@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade'); // Foreign key to users table
             $table->string('level_of_education');
-            $table->integer('points');
+            $table->integer('points')->nullable();
             $table->timestamps();
         });
     }

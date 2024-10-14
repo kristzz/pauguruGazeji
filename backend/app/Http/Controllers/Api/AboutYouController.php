@@ -38,25 +38,34 @@ class AboutYouController extends Controller
     }
 
     public function aboutYouSubjects(Request $request)
-    {
-        $validated = $request->validate([
-            'user_id' => 'required|integer|exists:users,id',
-            'subjects' => 'required|array', // Validate that subjects are provided as an array
-            'subjects.*' => 'integer|exists:subjects,id', // Ensure each subject ID exists
-        ]);
+{
+    $validated = $request->validate([
+        'user_id' => 'required|integer|exists:users,id',
+        'subjects' => 'required|array',
+        'subjects.*' => 'integer|exists:subjects,id',
+    ]);
 
-        // Find the AboutUser model based on the user_id
-        $aboutuser = AboutUser::where('user_id', $validated['user_id'])->first();
+    try {
+        $aboutUser = AboutUser::where('user_id', $validated['user_id'])->first();
 
-        if (!$aboutuser) {
+        if (!$aboutUser) {
             return response()->json(['message' => 'AboutUser not found'], 404);
         }
 
         // Sync subjects without detaching previous subjects
-        $aboutuser->subjects()->syncWithoutDetaching($validated['subjects']);
+        $aboutUser->subjects()->syncWithoutDetaching($validated['subjects']);
 
         return response()->json(['message' => 'Subjects updated successfully.']);
-    }
+    }catch (\Exception $e) {
+            // Dump the error message and stack trace for immediate feedback
+            return response()->json([
+                'error' => 'An error occurred while updating subjects.',
+                'details' => $e->getMessage(),
+                'stack' => $e->getTraceAsString() // Return stack trace for context
+            ], 500);
+        }
+}
+
 
 
     public function aboutYouEducation(Request $request){
@@ -66,21 +75,16 @@ class AboutYouController extends Controller
         ]);
     
         // Find the AboutUser model based on the user_id
-        $aboutuser = AboutUser::where('user_id', $validated['user_id'])->first();
-    
-        if (!$aboutuser) {
-            return response()->json(['message' => 'AboutUser not found'], 404);
-        }
 
-        $aboutuser->update([
-            'level_of_education' => $validated['level_of_education']
-        ]);
+            $aboutUser = AboutUser::create([
+                'user_id' => $validated['user_id'],
+                'level_of_education' => $validated['level_of_education']
+            ]);
     
-        
-    
-        return response()->json(['message' => 'education updated successfully.']);
-    }
+            return response()->json(['message' => 'education updated successfully']);
+
     
 }
 
 
+}
