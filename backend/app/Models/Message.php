@@ -17,6 +17,7 @@ class Message extends Model
     protected $fillable = [
         'user_id',
         'content',
+        'subject',
     ];
 
     // Inverse One-to-Many relationship with User
@@ -25,4 +26,3 @@ class Message extends Model
         return $this->belongsTo(User::class);
     }
 }
-
