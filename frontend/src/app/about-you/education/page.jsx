@@ -64,7 +64,7 @@ export default function Home() {
         });
 
         console.log(response.data);
-        router.push("/");
+        router.push("/about-you/subjects");
     } catch (error) {
         console.error("Error response:", error.response);
         if (error.response) {
