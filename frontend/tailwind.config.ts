@@ -12,6 +12,9 @@ const config: Config = {
         "main-white" : "#f7fcf7",
         "main-blue" : "#0e416b",
         "main-red" : "#d14945",
+      },
+      fontFamily: {
+        sans: ['var(--font-space-grotesk)'],
       }
     },
   },
