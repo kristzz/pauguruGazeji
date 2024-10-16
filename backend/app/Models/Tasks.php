@@ -17,11 +17,12 @@ class Tasks extends Model
     protected $fillable = [
         'name',
         'task_description',
+        'subject_id',
     ];
 
     // One-to-Many relationship with SubjectsMatter
-    public function tasks()
+    public function subject()
     {
-        return $this->hasMany(SubjectMatter::class);
+        return $this->belongsTo(Subject::class);
     }
 }
