@@ -12,7 +12,6 @@ export default function ResetPassword() {
 
 
   useEffect(() => {
-    // Retrieve token and email from the query parameters in the URL
     const queryParams = new URLSearchParams(window.location.search);
     const tokenFromUrl = queryParams.get('token');
     const emailFromUrl = queryParams.get('email');

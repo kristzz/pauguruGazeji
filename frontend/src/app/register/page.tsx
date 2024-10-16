@@ -24,7 +24,7 @@ export default function Register() {
         password,
         password_confirmation: confirmPassword, // Pass password confirmation
       });
-      console.log('Registration successful:', response.data);
+      console.log('Registration successful: verify email or sum', response.data);
       // Optionally reset form or show success message
     } catch (error) {
       console.error('Registration failed:', error);
