@@ -23,4 +23,9 @@ class SubjectMatter extends Model
     {
         return $this->hasMany(Subject::class);
     }
+
+    public function aboutUsers()
+    {
+        return $this->belongsToMany(AboutUser::class, 'about_user_subject');
+    }
 }
