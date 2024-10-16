@@ -7,6 +7,9 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Password;
+use Illuminate\Auth\Events\Registered;
+use App\Models\Tasks;
 
 class AuthController extends Controller
 {
@@ -25,9 +28,24 @@ class AuthController extends Controller
             "role" => "user" 
         ]);
 
+         // Log the user in
+        Auth::attempt([
+            "email" => $request->email,
+            "password" => $request->password
+        ]);
+        
+        $user = Auth::user();
+        // Generate access token for the user
+        $token = $user->createToken("userToken")->accessToken;
+
+        // Trigger email verification notification
+        event(new Registered($user));
+
         return response()->json([
             "status" => true,
-            "message" => "User created successfully"
+            "message" => "User created and logged in successfully. Please verify your email.",
+            "token" => $token,
+            "role" => $user->role // Include user role in the response
         ]);
     }
 
@@ -176,4 +194,6 @@ class AuthController extends Controller
         $user->delete();
         return response()->json(['message' => 'User deleted successfully!'], 200);
     }
-}
+
+
+}   
