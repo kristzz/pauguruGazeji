@@ -5,7 +5,7 @@ const api = axios.create({
 });
 
 const token = localStorage.getItem('token');
-console.log('Token:', token); // Add this line for debugging
+console.log('Token:', token); // debug
 if (token) {
     api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
 }

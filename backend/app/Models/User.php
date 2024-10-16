@@ -41,7 +41,7 @@ class User extends Authenticatable implements CanResetPassword
 
     // One-to-Many relationship with Messages
     public function messages()
-    {
+    {   
         return $this->hasMany(Message::class);
     }
 }
