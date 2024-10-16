@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Tasks;
 
 class AuthController extends Controller
 {
@@ -146,6 +147,16 @@ class AuthController extends Controller
             'data' => $user
         ]);
     }
+    //funckija prieks leadboard dabun visus lietotajus ja daudz lietotaji bus varbut kkadu limitu uzlikt ka like 50 panem or smtn
+    public function countsUsers(Request $request){
+        $users = \App\Models\User::select('users.id', 'users.email')
+            ->orderBy('users.id', 'asc')
+            ->get(); 
+    
+        return response()->json([
+            "data" => $users->toArray(), 
+        ]);
+    }
 
     public function index()
     {
@@ -158,4 +169,6 @@ class AuthController extends Controller
     $user->delete();
     return response()->json(['message' => 'User deleted successfully!'], 200);
     }
-}
+
+
+}   
