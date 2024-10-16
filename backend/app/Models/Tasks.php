@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class SubjectMatter extends Model
+class Tasks extends Model
 {
     use HasFactory;
 
@@ -16,16 +16,12 @@ class SubjectMatter extends Model
      */
     protected $fillable = [
         'name',
+        'task_description',
     ];
 
-    // One-to-Many relationship with Subjects
-    public function subjects()
+    // One-to-Many relationship with SubjectsMatter
+    public function tasks()
     {
-        return $this->hasMany(Subject::class);
-    }
-
-    public function aboutUsers()
-    {
-        return $this->belongsToMany(AboutUser::class, 'about_user_subject');
+        return $this->hasMany(SubjectMatter::class);
     }
 }

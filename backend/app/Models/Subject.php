@@ -28,6 +28,6 @@ class Subject extends Model
     // Many-to-Many relationship with AboutUsers
     public function aboutUsers()
     {
-        return $this->belongsToMany(AboutUser::class, 'about_user_subject');
+        return $this->belongsToMany(AboutUser::class);
     }
 }

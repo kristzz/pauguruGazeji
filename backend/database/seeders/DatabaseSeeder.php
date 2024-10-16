@@ -18,13 +18,22 @@ class DatabaseSeeder extends Seeder
     {
         // Create some Subject Matters
         $subjectMatters = SubjectMatter::factory()->count(5)->create();
+        
+        $subjects = [
+            'Geometry', 'Algebra', 'Latvian', 'English', 'Chemistry', 
+            'Biology', 'Physics', 'Geography', 'Art', 'History', 
+            'Programming', 'Literature', 'Sports', 'Business'
+        ];
 
-        // Create some Subjects under each Subject Matter
-        $subjectMatters->each(function ($subjectMatter) {
-            $subjects = Subject::factory()->count(3)->create([
-                'subject_matter_id' => $subjectMatter->id
-            ]);
-        });
+        // Assign subjects to subject matters in a loop (you can customize this logic as needed)
+        foreach ($subjectMatters as $index => $subjectMatter) {
+            foreach (array_slice($subjects, $index * 3, 3) as $subjectName) {
+                Subject::create([
+                    'name' => $subjectName,
+                    'subject_matter_id' => $subjectMatter->id,
+                ]);
+            }
+        }
 
         // Create 10 Users, AboutUser records, Messages and Assign random subjects to AboutUsers
         User::factory()->count(10)->create()->each(function ($user) {
