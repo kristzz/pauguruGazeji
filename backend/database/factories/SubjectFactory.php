@@ -17,8 +17,14 @@ class SubjectFactory extends Factory
      */
     public function definition(): array
     {
+        $subjects = [
+            'Geometry', 'Algebra', 'Latvian', 'English', 'Chemistry', 
+            'Biology', 'Physics', 'Geography', 'Art', 'History', 
+            'Programming', 'Literature', 'Sports', 'Business'
+        ];
+
         return [
-            'name' => $this->faker->word(),
+            'name' => $this->faker->randomElement($subjects), // Pick from predefined subjects
             'subject_matter_id' => SubjectMatter::factory(),
         ];
     }

@@ -8,10 +8,17 @@ use App\Http\Controllers\Api\EmailVerificationController;
 
 
 // User Registration
+use App\Http\Controllers\Api\AboutYouController;
+use App\Models\Tasks;
+
+Route::get('/tasks', function () {
+    return Tasks::all(); // This retrieves all tasks from the database
+});
 Route::post('/register', [AuthController::class, 'register']);
 
 // User Login
 Route::post('/login', [AuthController::class, 'login']);
+Route::post("/countsUsers" ,[AuthController::class, "countsUsers"]);
 
 // Send Password Reset Link
 Route::post('/forgot-password', [ForgotPasswordController::class, 'sendResetLinkEmail']);
@@ -30,8 +37,15 @@ Route::post('/email/resend', [EmailVerificationController::class, 'resend'])->mi
 Route::group([
     "middleware" => "auth:api"
 ], function (){
+<<<<<<< HEAD
     Route::get('profile', [AuthController::class, 'profile']);
 
+=======
+Route::get('profile', [AuthController::class, 'profile']);
+Route::post('/about-you', [AboutYouController::class, 'aboutYou']);
+Route::post('/about-you/subjects', [AboutYouController::class, 'aboutYouSubjects']);
+Route::post('/about-you/education', [AboutYouController::class, 'aboutYouEducation']);
+>>>>>>> 73f0907ba2570172c9350db89583020aacc9cfff
 
 });
 

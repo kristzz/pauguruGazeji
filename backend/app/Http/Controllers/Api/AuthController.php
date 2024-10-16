@@ -7,8 +7,6 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Password;
-use Illuminate\Auth\Events\Registered;
 
 class AuthController extends Controller
 {
@@ -27,12 +25,9 @@ class AuthController extends Controller
             "role" => "user" 
         ]);
 
-        // Trigger email verification notification
-        event(new Registered($user));
-
         return response()->json([
             "status" => true,
-            "message" => "User created successfully. Please verify your email."
+            "message" => "User created successfully"
         ]);
     }
 
@@ -156,6 +151,16 @@ class AuthController extends Controller
             'status' => true,
             'message' => 'Profile updated successfully',
             'data' => $user
+        ]);
+    }
+    //funckija prieks leadboard dabun visus lietotajus ja daudz lietotaji bus varbut kkadu limitu uzlikt ka like 50 panem or smtn
+    public function countsUsers(Request $request){
+        $users = \App\Models\User::select('users.id', 'users.email')
+            ->orderBy('users.id', 'asc')
+            ->get(); 
+    
+        return response()->json([
+            "data" => $users->toArray(), 
         ]);
     }
 
