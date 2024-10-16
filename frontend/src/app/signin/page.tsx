@@ -76,4 +76,8 @@ export default function Signin() {
       </div>
     </main>
   );
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> main
