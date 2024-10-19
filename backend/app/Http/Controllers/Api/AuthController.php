@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\Api;
-
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
@@ -170,5 +170,40 @@ class AuthController extends Controller
     return response()->json(['message' => 'User deleted successfully!'], 200);
     }
 
+    public function getUserTasks()
+    {
+        // Get the authenticated user's ID
+        $userId = Auth::id(); // Get the authenticated user's ID
+    
+        // Use left joins to ensure user data is returned even if no tasks are found
+        $tasks = DB::table('users')
+            ->leftJoin('about_users', 'users.id', '=', 'about_users.user_id')
+            ->leftJoin('about_user_subject', 'about_users.id', '=', 'about_user_subject.about_user_id')
+            ->leftJoin('subjects', 'about_user_subject.subject_id', '=', 'subjects.id')
+            ->leftJoin('subject_matters', 'subjects.id', '=', 'subject_matters.subject_id')
+            ->leftJoin('tasks', 'subject_matters.id', '=', 'tasks.subject_matter_id')
+            ->whereNotNull('tasks.id')
+            ->where('users.id', $userId) // Filter by the authenticated user's ID
+            ->select(
+                'users.id as user_id', 
+                'users.name as user_name', 
+                'users.surname', 
+                'users.email', 
+                'about_users.level_of_education', 
+                'about_users.points',
+                'subjects.id as subject_id',
+                'subjects.name as subject_name',
+                'subject_matters.id as subject_matter_id',
+                'subject_matters.name as subject_matter_name',
+                'tasks.id as task_id',
+                'tasks.name as task_name',
+                'tasks.task_description',
+                'tasks.correct_answer'
+            )
+            ->get();
+    
+        // Return the tasks with user info
+        return response()->json($tasks);
+    }
 
 }   

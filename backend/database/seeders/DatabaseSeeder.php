@@ -16,21 +16,23 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // Create some Subject Matters
-        $subjectMatters = SubjectMatter::factory()->count(5)->create();
-        
+
+        // Define subjects
         $subjects = [
             'Geometry', 'Algebra', 'Latvian', 'English', 'Chemistry', 
             'Biology', 'Physics', 'Geography', 'Art', 'History', 
             'Programming', 'Literature', 'Sports', 'Business'
         ];
 
-        // Assign subjects to subject matters in a loop (you can customize this logic as needed)
-        foreach ($subjectMatters as $index => $subjectMatter) {
-            foreach (array_slice($subjects, $index * 3, 3) as $subjectName) {
-                Subject::create([
-                    'name' => $subjectName,
-                    'subject_matter_id' => $subjectMatter->id,
+        // Create subjects
+        foreach ($subjects as $subjectName) {
+            $subject = Subject::create(['name' => $subjectName]);
+
+            // Assign multiple subject matters to each subject
+            foreach (range(1, 3) as $i) {
+                SubjectMatter::create([
+                    'name' => "Subject Matter $i for $subjectName",
+                    'subject_id' => $subject->id,  // Link to the subject
                 ]);
             }
         }

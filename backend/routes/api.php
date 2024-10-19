@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\AboutYouController;
 use App\Models\Tasks;
 use App\Http\Controllers\SubjectController;
 use App\Http\Controllers\MessageController;
+use Illuminate\Container\Attributes\Auth;
 
 Route::get('/tasks', function () {
     return Tasks::all(); // This retrieves all tasks from the database
@@ -40,4 +41,5 @@ Route::post('/createTask', [SubjectController::class, 'createTask']);
 
 Route::post('/getLastTask', [SubjectController::class, 'getLastTask']);
 
+Route::get('/getUserTasks', [AuthController::class, 'getUserTasks']);
 });

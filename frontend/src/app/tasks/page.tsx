@@ -4,18 +4,26 @@ import axios from 'axios';
 import Head from 'next/head';
 
 export default function Tasks() {
+    const [profile, setProfile] = useState({ id:'',name: '', email: '' });
     const [tasks, setTasks] = useState([]);
     const [currentIndex, setCurrentIndex] = useState(0);
     const [touchStart, setTouchStart] = useState(null);
     const [touchEnd, setTouchEnd] = useState(null);
     const [boxPosition, setBoxPosition] = useState(0); 
 
+    
+
     useEffect(() => {
-        
         const fetchTasks = async () => {
             try {
-                const response = await axios.get('http://127.0.0.1:8000/api/tasks'); 
+                const token = localStorage.getItem('userToken'); // Get the token from local storage
+                const response = await axios.get('http://127.0.0.1:8000/api/getUserTasks', {
+                    headers: {
+                        Authorization: `Bearer ${token}` // Include the token in the request
+                    }
+                });
                 setTasks(response.data);
+                console.log(response.data.task_name);
             } catch (error) {
                 console.error("Error fetching tasks:", error);
             }
@@ -75,8 +83,8 @@ export default function Tasks() {
                 >
                     {currentTask ? (
                         <>
-                            <div className="text-black mt-3 relative text-lg text-center">{currentTask.name}</div>
-                            <div className="text-black mt-3 relative text-lg text-center">{currentTask.task_description}</div>
+                            <div className="text-black mt-3 relative text-lg text-center">{tasks.task_name}</div>
+                            <div className="text-black mt-3 relative text-lg text-center">{tasks.task_description}</div>
                         </>
                     ) : (
                         <div className="text-black mt-3 relative text-lg text-center">No tasks available</div>

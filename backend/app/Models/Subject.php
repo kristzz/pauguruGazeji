@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\SubjectMatter;
 
 class Subject extends Model
 {
@@ -22,7 +23,7 @@ class Subject extends Model
     // Inverse One-to-Many relationship with SubjectMatter
     public function subjectMatter()
     {
-        return $this->belongsTo(SubjectMatters::class);
+        return $this->hasMany(SubjectMatter::class);
     }
 
     // Many-to-Many relationship with AboutUsers
@@ -34,6 +35,6 @@ class Subject extends Model
     // One-to-Many relationship with Task
     public function tasks()
     {
-        return $this->hasMany(Task::class);
+        return $this->hasMany(Tasks::class);
     }
 }
