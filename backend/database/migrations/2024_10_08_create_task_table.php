@@ -1,3 +1,4 @@
+// Updated task migration
 <?php
 
 use Illuminate\Database\Migrations\Migration;
@@ -13,10 +14,10 @@ return new class extends Migration
     {
         Schema::create('tasks', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('subject_matter_id')->constrained('subject_matter')->onDelete('cascade'); // Link to subject_matters
+            $table->foreignId('subject_matter_id')->constrained('subject_matters')->onDelete('cascade'); // Link to subject_matters
             $table->string('name');
             $table->string('task_description');
-            $table->string('correct_answer'); // Add nullable correct_answer column
+            $table->string('correct_answer')->nullable(); // Add nullable correct_answer
             $table->timestamps();
         });
     }

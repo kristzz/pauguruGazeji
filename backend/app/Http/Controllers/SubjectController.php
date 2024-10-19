@@ -2,9 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Validation\ValidationException;
+
+
 use App\Models\Subject;
-use App\Models\SubjectMatters;
-use App\Models\Tasks;  // Import the Tasks model
+use App\Models\SubjectMatter;
+use App\Models\Tasks; 
+
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 
@@ -40,7 +44,7 @@ class SubjectController extends Controller
             'name' => 'required|string|max:255',
         ]);
     
-        $subjectMatter = SubjectMatters::create([ // Update to use SubjectMatters
+        $subjectMatter = SubjectMatter::create([ // Update to use SubjectMatters
             'name' => $request->name,
             'subject_id' => $request->subject_id,
         ]);
@@ -52,34 +56,29 @@ class SubjectController extends Controller
             'message' => 'Subject matter created successfully.',
         ], 201);
     }
-    
-
-    /**
-     * Store a newly created task in storage.
-     */
-    public function createTask(Request $request): JsonResponse
-    {
-        $request->validate([
+     
+public function createTask(Request $request): JsonResponse
+{
+    try {
+        $validated = $request->validate([
             'subject_matter_id' => 'required|exists:subject_matters,id',
             'name' => 'required|string|max:255',
             'task_description' => 'required|string',
-            'correct_answer' => 'nullable|string|max:255', // Add validation for correct_answer
+            'correct_answer' => 'nullable|string',
         ]);
-
-        $task = Tasks::create([
-            'name' => $request->name,
-            'task_description' => $request->task_description,
-            'subject_matter_id' => $request->subject_matter_id,
-            'correct_answer' => $request->correct_answer, // Store correct_answer if provided
-        ]);
-
-        return response()->json([
-            'id' => $task->id,
-            'name' => $task->name,
-            'task_description' => $task->task_description,
-            'subject_matter_id' => $task->subject_matter_id,
-            'correct_answer' => $task->correct_answer,
-            'message' => 'Task created successfully.',
-        ], 201);
+    } catch (ValidationException $e) {
+        return response()->json(['errors' => $e->errors()], 422); // Return validation errors
     }
+
+    $task = Tasks::create($validated);
+
+    return response()->json([
+        'id' => $task->id,
+        'name' => $task->name,
+        'task_description' => $task->task_description,
+        'subject_matter_id' => $task->subject_matter_id,
+        'correct_answer' => $task->correct_answer,
+        'message' => 'Task created successfully.',
+    ], 201);
+}
 }

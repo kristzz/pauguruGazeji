@@ -1,25 +1,25 @@
 <?php
-namespace App\Models;
+    namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+    use Illuminate\Database\Eloquent\Factories\HasFactory;
+    use Illuminate\Database\Eloquent\Model;
 
-class SubjectMatter extends Model // Change this to singular
-{
-    use HasFactory;
-
-    protected $fillable = [
-        'name',
-        'subject_id', 
-    ];
-
-    public function subjects()
+    class SubjectMatter extends Model // Change this to singular
     {
-        return $this->belongsTo(Subject::class); // Change this to belongsTo
-    }
+        use HasFactory;
 
-    public function aboutUsers()
-    {
-        return $this->belongsToMany(AboutUser::class, 'about_user_subject');
+        protected $fillable = [
+            'name',
+            'subject_id', 
+        ];
+
+        public function subjects()
+        {
+            return $this->belongsTo(Subject::class); // Change this to belongsTo
+        }
+
+        public function aboutUsers()
+        {
+            return $this->belongsToMany(AboutUser::class, 'about_user_subject');
+        }
     }
-}

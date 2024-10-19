@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Tasks extends Model
+class Tasks extends Model // Change from Tasks to Task
 {
     use HasFactory;
 
@@ -22,8 +22,9 @@ class Tasks extends Model
     ];
 
     // One-to-Many relationship with SubjectsMatter
-    public function subject()
+    public function subjectMatter()
     {
-        return $this->belongsTo(Subject::class);
+        return $this->belongsTo(SubjectMatter::class);
     }
+    
 }
