@@ -5,13 +5,19 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\AboutYouController;
 use App\Models\Tasks;
+use App\Http\Controllers\SubjectController;
+use App\Http\Controllers\MessageController;
 
 Route::get('/tasks', function () {
     return Tasks::all(); // This retrieves all tasks from the database
 });
+
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 Route::post("/countsUsers" ,[AuthController::class, "countsUsers"]);
+
+Route::post('/createSubject', [SubjectController::class, 'createSubject']);
+
 
 Route::group([
     "middleware" => "auth:api"
@@ -27,4 +33,9 @@ Route::get('/getSubjectsWithLastMessages', [MessageController::class, 'getSubjec
 
 Route::get('/getLastMessageFromSubject', [MessageController::class, 'getLastMessageFromSubject']);
 Route::get('/getLastMessageFrom', [MessageController::class, 'getLastMessageFrom']);
+
+Route::post('/createSubjectMatter', [SubjectController::class, 'createSubjectMatter']);
+Route::post('/createTask', [SubjectController::class, 'createTask']);
+
+
 });

@@ -13,9 +13,10 @@ return new class extends Migration
     {
         Schema::create('tasks', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('subject_id')->constrained('subjects')->onDelete('cascade');//prieksmeta id
+            $table->foreignId('subject_matter_id')->constrained('subject_matter')->onDelete('cascade'); // Link to subject_matters
             $table->string('name');
             $table->string('task_description');
+            $table->string('correct_answer'); // Add nullable correct_answer column
             $table->timestamps();
         });
     }

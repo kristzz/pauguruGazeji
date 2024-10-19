@@ -17,7 +17,8 @@ class Tasks extends Model
     protected $fillable = [
         'name',
         'task_description',
-        'subject_id',
+        'subject_matter_id',
+        'correct_answer'
     ];
 
     // One-to-Many relationship with SubjectsMatter

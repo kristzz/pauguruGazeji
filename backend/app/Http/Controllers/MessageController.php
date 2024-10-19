@@ -85,36 +85,36 @@
         }
         
 
-    public function getSubjectsWithLastMessages()
-    {
-        $userId = Auth::id();
-
-        // Fetch the latest message for each unique subject by the user
-        $messages = Message::where('user_id', $userId)
-                    ->select('subject', \DB::raw('MAX(created_at) as latest_message_time'))
-                    ->groupBy('subject')
-                    ->get();
-
-        // Fetch the actual latest message content for each subject
-        $lastMessages = $messages->map(function($message) use ($userId) {
-            return Message::where('user_id', $userId)
-                        ->where('subject', $message->subject)
-                        ->latest('created_at')
-                        ->first();
-        });
-
-        // Build the response with subject and the last message content
-        $response = $lastMessages->map(function($message) {
-            return [
-                'subject' => $message->subject,
-                'last_message' => $message->content,
-                'created_at' => $message->created_at
-            ];
-        });
-
-        return response()->json([
-            'status' => true,
-            'data' => $response
-        ]);
-    }
+        public function getSubjectsWithLastMessages()
+        {
+            $userId = Auth::id();
+        
+            // Fetch the latest message for each unique subject by the user
+            $messages = Message::where('user_id', $userId)
+                        ->select('subject', \DB::raw('MAX(created_at) as latest_message_time'))
+                        ->groupBy('subject')
+                        ->get();
+        
+            // Fetch the actual latest message content for each subject
+            $lastMessages = $messages->map(function($message) use ($userId) {
+                return Message::where('user_id', $userId)
+                            ->where('subject', $message->subject)
+                            ->latest('created_at')
+                            ->first();
+            });
+        
+            // Build the response with subject and the last message content
+            $response = $lastMessages->map(function($message) {
+                return [
+                    'subject' => $message->subject,
+                    'last_message' => $message->content,
+                    'created_at' => $message->created_at
+                ];
+            });
+        
+            return response()->json([
+                'status' => true,
+                'data' => $response
+            ]);
+        }        
 }

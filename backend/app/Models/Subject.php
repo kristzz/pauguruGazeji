@@ -15,14 +15,14 @@ class Subject extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        'subject_matter_id',
         'name',
+        'id', // Keeping the 'id' as fillable, if needed (normally not required)
     ];
 
     // Inverse One-to-Many relationship with SubjectMatter
     public function subjectMatter()
     {
-        return $this->belongsTo(SubjectMatter::class);
+        return $this->belongsTo(SubjectMatters::class);
     }
 
     // Many-to-Many relationship with AboutUsers
@@ -30,8 +30,10 @@ class Subject extends Model
     {
         return $this->belongsToMany(AboutUser::class);
     }
+
+    // One-to-Many relationship with Task
     public function tasks()
     {
-        return $this->hasMany(Tasks::class);
+        return $this->hasMany(Task::class);
     }
 }
