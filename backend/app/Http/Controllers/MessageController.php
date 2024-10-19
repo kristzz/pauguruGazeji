@@ -117,4 +117,34 @@
                 'data' => $response
             ]);
         }        
+
+        public function getLastTask(Request $request): JsonResponse
+        {
+            $request->validate([
+                'subject_matter_id' => 'required|exists:subject_matters,id',
+            ]);
+        
+            $subjectMatterId = $request->input('subject_matter_id');
+        
+            $lastTask = Tasks::where('subject_matter_id', $subjectMatterId)
+                             ->orderBy('created_at', 'desc')
+                             ->first();
+        
+            if (!$lastTask) {
+                return response()->json([
+                    'message' => 'No tasks found for the specified subject matter.',
+                ], 404);
+            }
+        
+            return response()->json([
+                'id' => $lastTask->id,
+                'name' => $lastTask->name,
+                'task_description' => $lastTask->task_description,
+                'correct_answer' => $lastTask->correct_answer,
+                'created_at' => $lastTask->created_at,
+                'message' => 'Last task retrieved successfully.',
+            ]);
+        }
+        
+
 }

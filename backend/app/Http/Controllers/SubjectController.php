@@ -81,4 +81,36 @@ public function createTask(Request $request): JsonResponse
         'message' => 'Task created successfully.',
     ], 201);
 }
+/**
+ * Get the last task for a specific subject matter.
+ */
+public function getLastTask(Request $request): JsonResponse
+{
+    // Validate the request for subject matter ID
+    $request->validate([
+        'subject_matter_id' => 'required|exists:subject_matters,id',
+    ]);
+
+    // Fetch the last task associated with the subject matter
+    $lastTask = Tasks::where('subject_matter_id', $request->subject_matter_id)
+        ->orderBy('created_at', 'desc')
+        ->first();
+
+    if ($lastTask) {
+        return response()->json([
+            'id' => $lastTask->id,
+            'name' => $lastTask->name,
+            'task_description' => $lastTask->task_description,
+            'subject_matter_id' => $lastTask->subject_matter_id,
+            'correct_answer' => $lastTask->correct_answer,
+            'message' => 'Last task retrieved successfully.',
+        ], 200);
+    }
+
+    return response()->json([
+        'message' => 'No tasks found for this subject matter.',
+    ], 404);
+}
+
+
 }

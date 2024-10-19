@@ -38,4 +38,6 @@ Route::post('/createSubjectMatter', [SubjectController::class, 'createSubjectMat
 Route::post('/createTask', [SubjectController::class, 'createTask']);
 
 
+Route::post('/getLastTask', [SubjectController::class, 'getLastTask']);
+
 });
