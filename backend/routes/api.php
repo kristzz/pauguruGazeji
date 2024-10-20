@@ -1,8 +1,13 @@
 <?php
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Auth\ForgotPasswordController;
+use App\Http\Controllers\Auth\ResetPasswordController;
+use App\Http\Controllers\Api\EmailVerificationController;
+
+
+// User Registration
 use App\Http\Controllers\Api\AboutYouController;
 use App\Http\Controllers\Api\SettingsController;
 use App\Models\Tasks;
@@ -11,6 +16,8 @@ Route::get('/tasks', function () {
     return Tasks::all(); // This retrieves all tasks from the database
 });
 Route::post('/register', [AuthController::class, 'register']);
+
+// User Login
 Route::post('/login', [AuthController::class, 'login']);
 Route::post("/countsUsers" ,[AuthController::class, "countsUsers"]);
 
