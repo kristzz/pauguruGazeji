@@ -2,8 +2,10 @@
 
 import React, { useState } from 'react';
 import api from '../axios'; // Import your Axios instance
+import { useRouter } from 'next/navigation';
 
 export default function Register() {
+  const router = useRouter();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -25,7 +27,9 @@ export default function Register() {
         password_confirmation: confirmPassword, // Pass password confirmation
       });
       console.log('Registration successful:', response.data);
+      localStorage.setItem('userToken', response.data.token);
       // Optionally reset form or show success message
+      router.push('/about-you');
     } catch (error) {
       console.error('Registration failed:', error);
       setError('Registration failed, please try again.');

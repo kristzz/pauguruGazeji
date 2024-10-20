@@ -27,9 +27,21 @@ class AuthController extends Controller
             "role" => "user" 
         ]);
 
+         // Log the user in
+        Auth::attempt([
+            "email" => $request->email,
+            "password" => $request->password
+        ]);
+        
+        $user = Auth::user();
+        // Generate access token for the user
+        $token = $user->createToken("userToken")->accessToken;
+
         return response()->json([
             "status" => true,
-            "message" => "User created successfully"
+            "message" => "User created and logged in successfully",
+            "token" => $token,
+            "role" => $user->role // Include user role in the response
         ]);
     }
 
