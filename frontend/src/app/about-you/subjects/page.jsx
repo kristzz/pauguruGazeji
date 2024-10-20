@@ -80,7 +80,7 @@ export default function Home() {
 
       
       if (response.status === 200) {
-        alert("Subjects submitted successfully!"); // Success message
+        alert("Your information is submitted successfully!\n\nVerify your email!"); // Success message
         router.push('/');
       }
     } catch (error) {
@@ -119,14 +119,15 @@ export default function Home() {
       </div>
 
       <div className="flex flex-col items-center">
-        {/* Display error or success messages */}
-        {error && <p className="text-red-500 mt-4">{error}</p>}
+        
         <button
           id="cycleButton"
           onClick={handleSubmit}
           className="bg-main-red text-main-white w-40 h-12 rounded-lg mt-14 text-lg">
           Next
         </button>
+        {/* Display error or success messages */}
+        {error && <p className="text-red-500 mt-4">{error}</p>}
       </div>
     </div>
   );
