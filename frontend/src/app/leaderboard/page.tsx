@@ -41,7 +41,14 @@ const Leaderboard = () => {
     }, []);
 
     if (loading) {
-        return <div className="text-center text-xl text-gray-700">Loading...</div>;
+        return (
+            <main className="flex h-screen w-screen items-center justify-center bg-main-white">
+                <div className="flex flex-col items-center">
+                    <div className="loader ease-linear rounded-full border-4 border-t-4 border-main-blue h-12 w-12 mb-4"></div>
+                    <p className="text-lg text-main-blue">Loading...</p>
+                </div>
+            </main>
+        );
     }
 
     if (error) {
