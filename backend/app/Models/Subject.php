@@ -30,4 +30,9 @@ class Subject extends Model
     {
         return $this->belongsToMany(AboutUser::class);
     }
+
+    public function certificate()
+    {
+        return $this->belongsToMany(Certificate::class);
+    }
 }

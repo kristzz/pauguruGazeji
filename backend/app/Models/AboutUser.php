@@ -18,6 +18,7 @@ class AboutUser extends Model
         'user_id',
         'subjects',
         'level_of_education',
+        'is_visible',
         'points',
     ];
 
@@ -32,5 +33,5 @@ class AboutUser extends Model
     {
         return $this->belongsToMany(Subject::class);
     }
-    
+
 }

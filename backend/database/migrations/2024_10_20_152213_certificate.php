@@ -11,13 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('about_users', function (Blueprint $table) {
+        Schema::create('certificates', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade'); // Foreign key to users table
-            $table->boolean('is_visible')->default(true);
-            $table->string('level_of_education');
-            $table->integer('points')->nullable();
-            $table->timestamps();
+            $table->foreignId('subject_id')->constrained('subjects')->onDelete('cascade');
+            $table->timestamps(); 
         });
     }
 
@@ -26,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('about_users');
+        Schema::dropIfExists('certificates');
     }
 };
