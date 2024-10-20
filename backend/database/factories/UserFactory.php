@@ -25,4 +25,18 @@ class UserFactory extends Factory
             'password' => Hash::make('password'),
         ];
     }
+
+    public function defaultUser()
+    {
+        return $this->state([
+            'name' => 'test',
+            'surname' => 'test',
+            'age' => 25,
+            'email' => 'test@test.com',
+            'password' => Hash::make('test'), // Default password
+        ])->hasAboutUser([
+            'level_of_education' => 'Bachelor',
+            'points' => 500,
+        ]);
+    }
 }

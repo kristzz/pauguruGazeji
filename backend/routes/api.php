@@ -1,10 +1,11 @@
 <?php
-
+// User Registration
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\Api\EmailVerificationController;
+use App\Http\Controllers\Api\CertificateController;
 
 
 // User Registration
@@ -36,7 +37,7 @@ Route::middleware('auth:api')->group(function () {
     Route::post('/about-you/subjects', [AboutYouController::class, 'aboutYouSubjects']);
     Route::post('/about-you/education', [AboutYouController::class, 'aboutYouEducation']);
     Route::post('about-you/updateVisibility', [AboutYouController::class, 'updateVisibility']);
-
+    Route::get('/user-certificates', [CertificateController::class, 'getUserCertificates']);
     Route::get('/settings', [SettingsController::class, 'getSettings']);
     Route::post('/settings', [SettingsController::class, 'updateSettings']);
 });

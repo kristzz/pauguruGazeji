@@ -48,6 +48,10 @@ class User extends Authenticatable implements CanResetPassword, MustVerifyEmail
         return $this->hasMany(Message::class);
     }
 
+    public function certificate()
+    {
+        return $this->hasMany(Certificate::class);
+    }
     public function sendPasswordResetNotification($token)
     {
     $this->notify(new \App\Notifications\ResetPasswordNotification($token));

@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\AboutUser;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -9,11 +10,8 @@ use Illuminate\Database\Eloquent\Factories\Factory;
  */
 class AboutUserFactory extends Factory
 {
-    /**
-     * Define the model's default state.
-     *
-     * @return array
-     */
+    protected $model = AboutUser::class;
+
     public function definition(): array
     {
         return [
