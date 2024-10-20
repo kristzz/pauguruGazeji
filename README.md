@@ -23,6 +23,11 @@ Navigate to the backend directory
 cd backend
 cp .env.example .env
 composer install
+php artisan key:generate   
+php artisan passport:keys    
+php artisan migrate     
+php artisan db:seed      
+php artisan passport:client --personal   
 ```
 
 ### Next.js frontend setup
