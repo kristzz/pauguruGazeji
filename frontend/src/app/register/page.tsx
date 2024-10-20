@@ -46,12 +46,9 @@ export default function Register() {
         password_confirmation: confirmPassword, // Pass password confirmation
       });
 
-      // If registration is successful, show alert
       console.log('Registration successful:', response.data);
       localStorage.setItem('userToken', response.data.token);
       
-      alert('Registration successful! Please check your email to verify your account.');
-
       // Redirect to 'About You' page
       router.push('/about-you');
 
