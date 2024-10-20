@@ -10,7 +10,6 @@ export default function ResetPassword() {
   const [message, setMessage] = useState('');
   const [token, setToken] = useState('');
 
-
   useEffect(() => {
     const queryParams = new URLSearchParams(window.location.search);
     const tokenFromUrl = queryParams.get('token');
@@ -27,8 +26,20 @@ export default function ResetPassword() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!password || password !== confirmPassword) {
-      setMessage('Passwords do not match or are empty');
+    // Password validation
+    if (!password || password.length < 8) {
+      setMessage('Password must be at least 8 characters long');
+      return;
+    }
+
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d@$!%*?&]{8,}$/;
+    if (!passwordRegex.test(password)) {
+      setMessage('Password must contain at least one uppercase letter, one lowercase letter, and one number');
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      setMessage('Passwords do not match');
       return;
     }
 
@@ -40,7 +51,10 @@ export default function ResetPassword() {
         password_confirmation: confirmPassword,
         token,  // Include token in the request
       });
-      setMessage('Password reset successfully');
+
+      // Display success alert and redirect to login page
+      alert('Password reset successfully. You will be redirected to the login page.');
+      window.location.href = '/login';  // Redirect to the login page
     } catch (error) {
       setMessage(error.response?.data?.message || 'Error resetting password');
     }
@@ -91,7 +105,7 @@ export default function ResetPassword() {
               </button>
             </div>
 
-            {message && <p className="mt-4">{message}</p>}
+            {message && <p className="mt-4 text-main-white">{message}</p>}
           </form>
         </div>
       </div>
