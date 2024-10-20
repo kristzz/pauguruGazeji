@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\AboutYouController;
+use App\Http\Controllers\Api\SettingsController;
 use App\Models\Tasks;
 
 Route::get('/tasks', function () {
@@ -21,5 +22,8 @@ Route::middleware('auth:api')->group(function () {
     Route::post('/about-you/subjects', [AboutYouController::class, 'aboutYouSubjects']);
     Route::post('/about-you/education', [AboutYouController::class, 'aboutYouEducation']);
     Route::post('about-you/updateVisibility', [AboutYouController::class, 'updateVisibility']);
+
+    Route::get('/settings', [SettingsController::class, 'getSettings']);
+    Route::post('/settings', [SettingsController::class, 'updateSettings']);
 });
 

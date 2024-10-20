@@ -25,13 +25,17 @@ export default function Settings() {
     };
 
     return (
-        <main>
-            <h3>Profile Visibility</h3>
-            <p>Who can see your profile?</p>
-            <select value={isVisible ? 'Public' : 'Private'} onChange={handleVisibilityChange}>
-                <option value="Public">Public</option>
-                <option value="Private">Private</option>
-            </select>
-        </main>
-    );
+      <main className="flex flex-col space-y-4">
+          <h3 className="text-2xl font-bold">Profile Visibility</h3>
+          <p>Who can see your profile?</p>
+          <select
+              value={isVisible ? 'Public' : 'Private'}
+              onChange={handleVisibilityChange}
+              className="rounded-md p-2 focus:outline-none focus:ring-2 focus:main-blue"
+          >
+              <option value="Public">Public</option>
+              <option value="Private">Private</option>
+          </select>
+      </main>
+  );
 }
