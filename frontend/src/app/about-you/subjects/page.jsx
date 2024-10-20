@@ -80,7 +80,7 @@ export default function Home() {
 
       
       if (response.status === 200) {
-        setSuccess("Subjects submitted successfully!"); // Success message
+        alert("Subjects submitted successfully!"); // Success message
         router.push('/');
       }
     } catch (error) {
@@ -119,18 +119,15 @@ export default function Home() {
       </div>
 
       <div className="flex flex-col items-center">
+        {/* Display error or success messages */}
+        {error && <p className="text-red-500 mt-4">{error}</p>}
         <button
           id="cycleButton"
           onClick={handleSubmit}
-          className="bg-main-red text-main-white w-40 h-12 rounded-lg mt-16 text-lg"
-        >
+          className="bg-main-red text-main-white w-40 h-12 rounded-lg mt-14 text-lg">
           Next
         </button>
       </div>
-
-      {/* Display error or success messages */}
-      {error && <p className="text-red-500">{error}</p>}
-      {success && <p className="text-green-500">{success}</p>}
     </div>
   );
 }
@@ -139,7 +136,7 @@ function SubjectButton({ label, isSelected, onToggle }) {
   return (
     <button
       className={`border-main-blue border-2 rounded-lg w-auto pr-1 pl-1 m-1 ${
-        isSelected ? "bg-main-blue text-main-white" : "bg-gray-300"
+        isSelected ? "bg-main-blue text-main-white" : "bg-main-white"
       }`}
       onClick={onToggle}
     >
