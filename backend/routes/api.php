@@ -43,3 +43,6 @@ Route::post('/getLastTask', [SubjectController::class, 'getLastTask']);
 
 Route::get('/getUserTasks', [AuthController::class, 'getUserTasks']);
 });
+Route::post('/createSubject', [SubjectController::class, 'createSubject']);
+Route::post('/getSubjectByName', [SubjectController::class, 'getSubjectByName']);
+Route::post('/getSubjectMatterByName', [SubjectController::class, 'getSubjectMatterByName']);

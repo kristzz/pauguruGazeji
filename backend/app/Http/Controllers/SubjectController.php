@@ -34,6 +34,23 @@ class SubjectController extends Controller
         ], 201);
     }
 
+    public function getSubjectByName(Request $request) {
+        $subject = Subject::where('name', $request->name)->first();
+        if (!$subject) {
+            return response()->json(['status' => false, 'message' => 'Subject not found'], 404);
+        }
+        return response()->json(['status' => true, 'id' => $subject->id]);
+    }
+
+    public function getSubjectMatterByName(Request $request) {
+        $subject = SubjectMatter::where('name', $request->name)->first();
+        if (!$subject) {
+            return response()->json(['status' => false, 'message' => 'Subject matter not found'], 404);
+        }
+        return response()->json(['status' => true, 'id' => $subject->id]);
+    }
+
+
     /**
      * Store a newly created subject matter in storage.
      */

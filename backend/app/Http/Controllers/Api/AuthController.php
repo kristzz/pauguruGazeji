@@ -8,6 +8,9 @@ use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Tasks;
+use App\Models\Subject;
+use App\Models\SubjectMatter;
+
 
 class AuthController extends Controller
 {
@@ -205,5 +208,8 @@ class AuthController extends Controller
         // Return the tasks with user info
         return response()->json($tasks);
     }
+
+
+    
 
 }   
