@@ -21,6 +21,13 @@ Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 Route::post("/countsUsers" ,[AuthController::class, "countsUsers"]);
 
+
+Route::post('/reset-password', [ResetPasswordController::class, 'reset'])->name('password.reset');
+
+
+Route::get('/email/verify/{id}/{hash}', [EmailVerificationController::class, 'verify'])->middleware(['signed'])->name('verification.verify');
+Route::post('/email/resend', [EmailVerificationController::class, 'resend'])->middleware(['auth:api'])->name('verification.resend');
+
 Route::middleware('auth:api')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::delete('/user', [AuthController::class, 'delete']);
