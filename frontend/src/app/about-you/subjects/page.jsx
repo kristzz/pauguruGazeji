@@ -80,8 +80,7 @@ export default function Home() {
 
       
       if (response.status === 200) {
-        alert("Your information is submitted successfully!\n\nVerify your email!"); // Success message
-        router.push('/');
+        setSuccess(true); // Show success modal
       }
     } catch (error) {
       setError(error.response?.data?.message || "Error submitting subjects."); // Handle error
@@ -128,6 +127,24 @@ export default function Home() {
         </button>
         {/* Display error or success messages */}
         {error && <p className="text-red-500 mt-4">{error}</p>}
+        {success && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg text-center">
+            <h2 className="text-2xl font-semibold mb-4 text-main-blue">Success!</h2>
+            <p className="mb-2">Your information has been submitted successfully!</p>
+            <p className="mb-2">Please verify your email.</p>
+            <button
+              className="bg-main-red text-main-white w-32 h-10 rounded-lg"
+              onClick={() => {
+                setSuccess(false); // Close the modal
+                router.push("/"); // Navigate back home
+              }}
+            >
+              Ok
+            </button>
+          </div>
+        </div>
+      )}
       </div>
     </div>
   );
