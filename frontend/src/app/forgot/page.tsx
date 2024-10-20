@@ -2,16 +2,24 @@
 
 import { useState } from 'react';
 import axios from 'axios';
+import { useRouter } from 'next/navigation';  
 
 export default function ForgotPassword() {
   const [email, setEmail] = useState('');
   const [message, setMessage] = useState('');
+  const router = useRouter();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       const res = await axios.post('http://127.0.0.1:8000/api/forgot-password', { email });
       setMessage('Password reset link sent to your email');
+      alert('Please check your email for the password reset link.');
+      
+      // Redirect to the login page after alert
+      setTimeout(() => {
+        router.push('/login');
+      }, 2000); // 2-second delay before redirecting
     } catch (error) {
       setMessage('Error sending reset link');
     }
@@ -33,7 +41,7 @@ export default function ForgotPassword() {
             />
             <div className="flex items-center mt-8">
               <button className="bg-main-blue text-main-white text-lg rounded-lg h-12 w-64">
-                Send kaut ko
+                Reset Password
               </button>
             </div>
             {message && <p>{message}</p>}

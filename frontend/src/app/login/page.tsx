@@ -3,29 +3,59 @@
 import React, { useState } from 'react';
 import Link from "next/link";
 import api from '../axios'; 
+import { useRouter } from 'next/navigation';
 
 export default function Signin() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);  // New loading state
+  const router = useRouter();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError(''); // Clear any previous errors
+    setLoading(true); // Start loading
 
     try {
-      const response = await api.post('http://127.0.0.1:8000/api/login', {
-        email,
-        password,
-      });
-      console.log('Login successful:', response.data);
-      localStorage.setItem('userToken', response.data.token);
+        const response = await api.post('http://127.0.0.1:8000/api/login', {
+            email,
+            password,
+        });
+        
+        // **Check if login was successful based on the response**
+        if (response.data.status) { // Only proceed if status is true
+            console.log('Login successful:', response.data);
+            localStorage.setItem('userToken', response.data.token);
 
-      // Optionally redirect the user to a different page after login
-      // window.location.href = '/dashboard'; // Replace with your desired route
-    } catch (error) {
-      console.error('Login failed:', error);
-      setError('Invalid email or password. Please try again.');
+            // Show an alert instead of a success message
+            alert('Login successful! Redirecting to your dashboard...');
+
+            // Optionally redirect the user after login
+            setTimeout(() => {
+                router.push('/dashboard'); // Redirect to dashboard after success
+            }, 1500); // Redirect after 1.5 seconds for a smoother user experience
+        } else {
+            // Handle failed login attempt by displaying the error message
+            setError(response.data.message || 'Invalid login details.');
+        }
+
+    } catch (error: any) {
+        console.error('Login failed:', error);
+
+        // Set a fallback error message if no detailed message is provided
+        if (error.response && error.response.data && error.response.data.message) {
+            setError(error.response.data.message);
+        } else {
+            setError('An unexpected error occurred. Please try again.');
+        }
+    } finally {
+        setLoading(false); // Stop loading
     }
+};
+
+  const handleRegisterRedirect = () => {
+    router.push('/register');
   };
 
   return (
@@ -50,6 +80,7 @@ export default function Signin() {
               placeholder="Enter your email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              disabled={loading}  // Disable input during loading
             />
             <input
               className="h-12 w-64 my-4 rounded-lg p-4"
@@ -59,18 +90,37 @@ export default function Signin() {
               placeholder="Password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+              disabled={loading}  // Disable input during loading
             />
+
             <div className="mb-4">
               <Link href="/forgot" className="text-main-blue">
                 Forgot Password?
               </Link>
             </div>
-            {error && <p className="text-red-500">{error}</p>}
+
+            {error && <p className="text-main-white">{error}</p>} {/* Display error message */}
+
             <div className="flex items-center mt-8">
-              <button className="bg-main-blue text-main-white text-lg rounded-lg h-12 w-64">
-                Sign in
+              <button 
+                className="bg-main-blue text-main-white text-lg rounded-lg h-12 w-64"
+                disabled={loading} // Disable button during loading
+              >
+                {loading ? 'Signing in...' : 'Sign in'}  {/* Show loading state */}
               </button>
             </div>
+
+            <div className="flex items-center mt-8">
+              <button  
+                type="button" 
+                onClick={handleRegisterRedirect} 
+                className="bg-main-blue text-main-white text-lg rounded-lg h-12 w-64"
+                disabled={loading} // Disable button during loading
+              >
+                Register
+              </button>
+            </div>
+
           </form>
         </div>
       </div>

@@ -37,15 +37,12 @@ Route::post('/email/resend', [EmailVerificationController::class, 'resend'])->mi
 Route::group([
     "middleware" => "auth:api"
 ], function (){
-<<<<<<< HEAD
-    Route::get('profile', [AuthController::class, 'profile']);
+    
 
-=======
 Route::get('profile', [AuthController::class, 'profile']);
 Route::post('/about-you', [AboutYouController::class, 'aboutYou']);
 Route::post('/about-you/subjects', [AboutYouController::class, 'aboutYouSubjects']);
 Route::post('/about-you/education', [AboutYouController::class, 'aboutYouEducation']);
->>>>>>> 73f0907ba2570172c9350db89583020aacc9cfff
 
 });
 
