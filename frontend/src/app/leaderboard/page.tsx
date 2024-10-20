@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import Link from 'next/link';
 
 // Define a type for the user data
 interface User {
@@ -9,9 +10,9 @@ interface User {
 }
 
 const Leaderboard = () => {
-    const [users, setUsers] = useState<User[]>([]); // Specify the user array type
+    const [users, setUsers] = useState<User[]>([]);
     const [loading, setLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null); // Specify error as string or null
+    const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
         const fetchUsers = async () => {
@@ -56,9 +57,19 @@ const Leaderboard = () => {
     }
 
     return (
-        <div className="w-screen h-screen bg-main-blue flex px-4 py-8 justify-center">
-            <div className="bg-main-white shadow-lg border border-gray-200 rounded-lg w-[95%] sm:w-[90%] md:w-[70%] lg:w-[50%] p-4 md:p-6 overflow-x-auto">
-                <h2 className="text-xl md:text-2xl font-bold text-center mb-4 text-black">Leaderboard</h2>
+        <div className="w-screen h-screen bg-main-blue flex justify-center">
+            <div className="bg-main-white shadow-lg border border-gray-200 rounded-lg w-screen p-4 md:p-6 overflow-x-auto">
+                <div className="flex">
+                    {/* Back Button */}
+                    <Link href="/tasks" className="p-2 fixed top-4 left-4 z-10">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="size-6">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" />
+                        </svg>
+                    </Link>
+                </div>
+                
+                
+                <h2 className="text-xl md:text-2xl font-bold text-center mb-4 mt-8 text-black">Leaderboard</h2>
                 
                 <table className="min-w-full leading-normal">
                     <thead>
