@@ -22,7 +22,7 @@ class UserFactory extends Factory
             'surname' => $this->faker->lastName(),
             'age' => $this->faker->numberBetween(18, 60),
             'email' => $this->faker->unique()->safeEmail(),
-            'password' => Hash::make('password'), // Default password for seeding
+            'password' => Hash::make('password'),
         ];
     }
 }
