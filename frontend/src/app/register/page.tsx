@@ -1,4 +1,4 @@
-'use client';
+'use client'; //kautkas
 
 import React, { useState } from 'react';
 import api from '../axios'; // Import your Axios instance
