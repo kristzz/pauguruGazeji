@@ -4,14 +4,12 @@ import axios from 'axios';
 import Head from 'next/head';
 
 export default function Tasks() {
-    const [profile, setProfile] = useState({ id:'',name: '', email: '' });
+    const [profile, setProfile] = useState({ id: '', name: '', email: '' });
     const [tasks, setTasks] = useState([]);
     const [currentIndex, setCurrentIndex] = useState(0);
     const [touchStart, setTouchStart] = useState(null);
     const [touchEnd, setTouchEnd] = useState(null);
-    const [boxPosition, setBoxPosition] = useState(0); 
-
-    
+    const [boxPosition, setBoxPosition] = useState(0);
 
     useEffect(() => {
         const fetchTasks = async () => {
@@ -23,7 +21,7 @@ export default function Tasks() {
                     }
                 });
                 setTasks(response.data);
-                console.log(response.data.task_name);
+                console.log(response.data);
             } catch (error) {
                 console.error("Error fetching tasks:", error);
             }
@@ -31,12 +29,6 @@ export default function Tasks() {
 
         fetchTasks();
     }, []);
-
-    const changeTask = () => {
-        if (tasks.length > 0) {
-            setCurrentIndex((prevIndex) => (prevIndex + 1) % tasks.length);
-        }
-    };
 
     const handleTouchStart = (e) => {
         setTouchStart(e.targetTouches[0].clientX);
@@ -46,7 +38,7 @@ export default function Tasks() {
         setTouchEnd(e.targetTouches[0].clientX);
         if (touchStart !== null) {
             const distance = e.targetTouches[0].clientX - touchStart;
-            setBoxPosition(distance); 
+            setBoxPosition(distance); // Move box based on touch movement
         }
     };
 
@@ -55,41 +47,39 @@ export default function Tasks() {
             const distance = touchEnd - touchStart;
 
             if (distance > 150) {
-                console.log("Task has been selected");
-                changeTask();
+                console.log('swiped right');
+
+                setCurrentIndex((prevIndex) => (prevIndex < tasks.length - 1 ? prevIndex + 1 : prevIndex));
             } else if (distance < -150) {
-                if (tasks.length > 0) {
-                    setCurrentIndex((prevIndex) => (prevIndex + 1) % tasks.length);
-                }
+                console.log('swiped left');
+                setCurrentIndex((prevIndex) => (prevIndex < tasks.length - 1 ? prevIndex + 1 : prevIndex));
             }
         }
         setTouchStart(null);
         setTouchEnd(null);
-        setBoxPosition(0); 
+        setBoxPosition(0); // Reset box position after swiping
     };
 
-
-    const currentTask = tasks.length > 0 ? tasks[currentIndex] : null;
+    const currentTask = tasks.length > 0 ? tasks[currentIndex] : null; // Get the current task based on index
 
     return (
-        <main className=' bg-main-blue overflow-hidden h-screen w-screen absolute'>
+        <main className='bg-main-blue overflow-hidden h-screen w-screen absolute'>
             <div className="bg-main-red h-screen w-screen flex flex-col items-center absolute overflow-hidden">
-                <div 
+                <div
                     className="bg-main-white w-[65%] h-[50%] shadow-2xl absolute top-[20%] rounded-lg align-center border-2"
                     onTouchStart={handleTouchStart}
                     onTouchMove={handleTouchMove}
                     onTouchEnd={handleTouchEnd}
-                    style={{ transform: `translateX(${boxPosition}px)`, transition: 'none' }} 
+                    style={{ transform: `translateX(${boxPosition}px)`, transition: 'none' }}
                 >
                     {currentTask ? (
                         <>
-                            <div className="text-black mt-3 relative text-lg text-center">{tasks.task_name}</div>
-                            <div className="text-black mt-3 relative text-lg text-center">{tasks.task_description}</div>
+                            <div className="text-black mt-3 relative text-lg text-center">{currentTask.task_name}</div>
+                            <div className="text-black mt-3 relative text-lg text-center">{currentTask.task_description}</div>
                         </>
                     ) : (
                         <div className="text-black mt-3 relative text-lg text-center">No tasks available</div>
                     )}
-
                 </div>
             </div>
         </main>
