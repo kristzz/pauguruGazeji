@@ -15,50 +15,41 @@ export default function SettingsLayout({ children }: { children: ReactNode }) {
   };
 
   return (
-    <div className="flex w-screen h-screen bg-main-white relative">
-      {/* Container for buttons */}
-      <div className="flex items-center justify-between fixed top-4 left-4 right-4 z-10">
-        {/* Go Back Button */}
-        <Link
-          href="/profile"
-          className="flex items-center p-2 text-blue-600 hover:text-blue-800"
-        >
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="black" className="w-6 h-6 mr-2">
-            <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" />
+    <div className="flex w-screen h-screen bg-main-white">
+      {/* Toggle button for mobile on the right */}
+      <Link href="/profile" className="block md:hidden p-2 fixed top-4 left-4 z-10">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="size-6">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" />
+        </svg>
+      </Link>
+      <button
+        onClick={toggleSidebar}
+        className="block md:hidden p-2 fixed top-4 right-4 z-10"
+      >
+        {isSidebarOpen ? (
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            strokeWidth="1.5"
+            stroke="currentColor"
+            className="size-6"
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
           </svg>
-        </Link>
-
-        {/* Toggle button for mobile on the right */}
-        <button
-          onClick={toggleSidebar}
-          className="block md:hidden p-2"
-        >
-          {isSidebarOpen ? (
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth="1.5"
-              stroke="currentColor"
-              className="size-6"
-            >
-              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
-            </svg>
-          ) : (
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth="1.5"
-              stroke="currentColor"
-              className="size-6"
-            >
-              <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
-            </svg>
-          )}
-        </button>
-      </div>
-
+        ) : (
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            strokeWidth="1.5"
+            stroke="currentColor"
+            className="size-6"
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+          </svg>
+        )}
+      </button>
       {/* Sidebar with buttons on the right */}
       <aside
         className={`fixed md:relative w-64 p-8 bg-gray-100 transition-transform transform right-0 ${
@@ -146,7 +137,7 @@ export default function SettingsLayout({ children }: { children: ReactNode }) {
       </aside>
 
       {/* Content Area */}
-      <main className="flex-grow p-8 mt-8 md:mt-0 relative">
+      <main className="flex-grow p-8 mt-8 md:mt-0">
         {children}
       </main>
     </div>
