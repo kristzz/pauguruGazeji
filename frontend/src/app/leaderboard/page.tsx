@@ -7,6 +7,8 @@ import Link from 'next/link';
 interface User {
     id: number;
     email: string;
+    name: string;
+    points: number;
 }
 
 const Leaderboard = () => {
@@ -75,14 +77,16 @@ const Leaderboard = () => {
                     <thead>
                         <tr className="bg-gray-200 text-left text-gray-600 uppercase text-xs md:text-sm leading-normal">
                             <th className="py-2 md:py-3 px-4 md:px-6">Rank</th>
-                            <th className="py-2 md:py-3 px-4 md:px-6">Email</th>
+                            <th className="py-2 md:py-3 px-4 md:px-6">Points</th>
+                            <th className="py-2 md:py-3 px-4 md:px-6">Name</th>
                         </tr>
                     </thead>
                     <tbody>
                         {users.map((user, index) => (
                             <tr key={user.id} className="border-b border-gray-200 hover:bg-gray-100">
                                 <td className="py-2 md:py-3 px-4 md:px-6 text-gray-800">{index + 1}</td>
-                                <td className="py-2 md:py-3 px-4 md:px-6 text-black">{user.email}</td>
+                                <td className="py-2 md:py-3 px-4 md:px-6 text-black">{user.points}</td>
+                                <td className="py-2 md:py-3 px-4 md:px-6 text-black">{user.name}</td>
                             </tr>
                         ))}
                     </tbody>
