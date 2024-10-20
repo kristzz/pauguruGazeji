@@ -44,4 +44,9 @@ class User extends Authenticatable implements CanResetPassword
     {
         return $this->hasMany(Message::class);
     }
+
+    public function certificate()
+    {
+        return $this->hasMany(Certificate::class);
+    }
 }
