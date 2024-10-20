@@ -80,8 +80,7 @@ export default function Home() {
 
       
       if (response.status === 200) {
-        setSuccess("Subjects submitted successfully!"); // Success message
-        router.push('/');
+        setSuccess(true); // Show success modal
       }
     } catch (error) {
       setError(error.response?.data?.message || "Error submitting subjects."); // Handle error
@@ -119,18 +118,34 @@ export default function Home() {
       </div>
 
       <div className="flex flex-col items-center">
+        
         <button
           id="cycleButton"
           onClick={handleSubmit}
-          className="bg-main-red text-main-white w-40 h-12 rounded-lg mt-16 text-lg"
-        >
+          className="bg-main-red text-main-white w-40 h-12 rounded-lg mt-14 text-lg">
           Next
         </button>
+        {/* Display error or success messages */}
+        {error && <p className="text-red-500 mt-4">{error}</p>}
+        {success && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg text-center">
+            <h2 className="text-2xl font-semibold mb-4 text-main-blue">Success!</h2>
+            <p className="mb-2">Your information has been submitted successfully!</p>
+            <p className="mb-2">Please verify your email.</p>
+            <button
+              className="bg-main-red text-main-white w-32 h-10 rounded-lg"
+              onClick={() => {
+                setSuccess(false); // Close the modal
+                router.push("/"); // Navigate back home
+              }}
+            >
+              Ok
+            </button>
+          </div>
+        </div>
+      )}
       </div>
-
-      {/* Display error or success messages */}
-      {error && <p className="text-red-500">{error}</p>}
-      {success && <p className="text-green-500">{success}</p>}
     </div>
   );
 }
@@ -139,7 +154,7 @@ function SubjectButton({ label, isSelected, onToggle }) {
   return (
     <button
       className={`border-main-blue border-2 rounded-lg w-auto pr-1 pl-1 m-1 ${
-        isSelected ? "bg-main-blue text-main-white" : "bg-gray-300"
+        isSelected ? "bg-main-blue text-main-white" : "bg-main-white"
       }`}
       onClick={onToggle}
     >

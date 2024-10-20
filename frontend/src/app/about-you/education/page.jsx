@@ -46,6 +46,11 @@ export default function Home() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!formData.education) {
+      setError("Please select your education level.");
+      return;
+  }
     if (!profile.id) {
         setError("User ID not found.");
         return;
@@ -111,9 +116,18 @@ export default function Home() {
           <option value='highschool'>Highschool</option>
           <option value='College'>College</option>
         </select>
-        <button type="submit" className="bg-main-red text-main-white w-40 h-12 rounded-lg mt-16 text-lg">
+        <div className="flex flex-col items-center">
+        
+        <button
+          id="cycleButton"
+          onClick={handleSubmit}
+          className="bg-main-red text-main-white w-40 h-12 rounded-lg mt-14 text-lg">
           Next
         </button>
+        {/* Display error or success messages */}
+        {error && <p className="text-red-500 mt-4">{error}</p>}
+      </div>
+        
       </form>
     </div>
   </div>
