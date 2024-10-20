@@ -29,11 +29,11 @@ export default function Signin() {
             localStorage.setItem('userToken', response.data.token);
 
             // Show an alert instead of a success message
-            alert('Login successful! Redirecting to your dashboard...');
+            alert('Login successful!');
 
             // Optionally redirect the user after login
             setTimeout(() => {
-                router.push('/dashboard'); // Redirect to dashboard after success
+                router.push('/profile'); // Redirect to dashboard after success
             }, 1500); // Redirect after 1.5 seconds for a smoother user experience
         } else {
             // Handle failed login attempt by displaying the error message

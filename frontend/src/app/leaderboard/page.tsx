@@ -9,12 +9,15 @@ interface User {
     email: string;
     name: string;
     points: number;
+    favorite_subject: string; // New field for favorite subject
 }
 
 const Leaderboard = () => {
     const [users, setUsers] = useState<User[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
+    const [selectedUser, setSelectedUser] = useState<User | null>(null); // State for selected user
+    const [isPopupVisible, setIsPopupVisible] = useState(false); // State for popup visibility
 
     useEffect(() => {
         const fetchUsers = async () => {
@@ -43,6 +46,16 @@ const Leaderboard = () => {
         fetchUsers();
     }, []);
 
+    const showPopup = (user: User) => {
+        setSelectedUser(user); // Set the selected user data
+        setIsPopupVisible(true); // Show the popup
+    };
+
+    const closePopup = () => {
+        setIsPopupVisible(false); // Close the popup
+        setSelectedUser(null); // Clear the selected user
+    };
+
     if (loading) {
         return (
             <main className="flex h-screen w-screen items-center justify-center bg-main-white">
@@ -70,7 +83,6 @@ const Leaderboard = () => {
                     </Link>
                 </div>
                 
-                
                 <h2 className="text-xl md:text-2xl font-bold text-center mb-4 mt-8 text-black">Leaderboard</h2>
                 
                 <table className="min-w-full leading-normal">
@@ -83,7 +95,7 @@ const Leaderboard = () => {
                     </thead>
                     <tbody>
                         {users.map((user, index) => (
-                            <tr key={user.id} className="border-b border-gray-200 hover:bg-gray-100">
+                            <tr key={user.id} className="border-b border-gray-200 hover:bg-gray-100 cursor-pointer" onClick={() => showPopup(user)}>
                                 <td className="py-2 md:py-3 px-4 md:px-6 text-gray-800">{index + 1}</td>
                                 <td className="py-2 md:py-3 px-4 md:px-6 text-black">{user.points}</td>
                                 <td className="py-2 md:py-3 px-4 md:px-6 text-black">{user.name}</td>
@@ -91,6 +103,20 @@ const Leaderboard = () => {
                         ))}
                     </tbody>
                 </table>
+
+                {/* Popup */}
+                {isPopupVisible && selectedUser && (
+                    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+                        <div className="bg-white p-6 rounded-lg shadow-lg">
+                            <h3 className="text-xl font-bold mb-2">{selectedUser.name}'s Information</h3>
+                            <p><strong>Points:</strong> {selectedUser.points}</p>
+                            <p><strong>Favorite Subject:</strong> {selectedUser.favorite_subject}</p>
+                            <button className="mt-4 px-4 py-2 bg-blue-500 text-white rounded" onClick={closePopup}>
+                                Close
+                            </button>
+                        </div>
+                    </div>
+                )}
             </div>
         </div>
     );
