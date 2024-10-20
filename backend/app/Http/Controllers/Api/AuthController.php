@@ -174,8 +174,9 @@ class AuthController extends Controller
     }
     //funckija prieks leadboard dabun visus lietotajus ja daudz lietotaji bus varbut kkadu limitu uzlikt ka like 50 panem or smtn
     public function countsUsers(Request $request){
-        $users = User::select('users.id', 'users.email')
-            ->orderBy('users.id', 'asc')
+        $users = User::select('users.id','about_users.points', 'users.name')
+            ->join('about_users', 'users.id', '=', 'about_users.user_id') // Join with the AboutUser table
+            ->orderBy('about_users.points', 'desc')
             ->get();
 
         return response()->json([
