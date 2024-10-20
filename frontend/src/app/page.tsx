@@ -36,7 +36,7 @@ export default function Home() {
                       xl:mt-36" >Start your learning journey today!</h1>
         <Link href="/register"><button className="bg-main-blue text-main-white text-lg rounded-lg h-12 w-40 my-4
                                                   sm:w-60 sm:h-16 sm:text-xl">Register</button></Link>
-        <Link href="/signin"><button className="bg-main-red text-main-white text-lg rounded-lg h-12 w-40 my-4
+        <Link href="/login"><button className="bg-main-red text-main-white text-lg rounded-lg h-12 w-40 my-4
                                                   sm:w-60 sm:h-16 sm:text-xl">Sign In</button></Link>
       </div>
     </main>

@@ -16,7 +16,7 @@ class AboutUserFactory extends Factory
     {
         return [
             'level_of_education' => $this->faker->randomElement(['High School', 'Bachelor', 'Master', 'PhD']),
-            'points' => $this->faker->numberBetween(100, 1000),
+            'points' => $this->faker->numberBetween(40, 100),
         ];
     }
 }
