@@ -1,4 +1,4 @@
-'use client'
+'use client';
 
 import Link from 'next/link';
 import { ReactNode, useState } from 'react';
@@ -10,6 +10,10 @@ export default function SettingsLayout({ children }: { children: ReactNode }) {
     setIsSidebarOpen(!isSidebarOpen); // Toggle sidebar on mobile
   };
 
+  const closeSidebar = () => {
+    setIsSidebarOpen(false); // Close sidebar
+  };
+
   return (
     <div className="flex w-screen h-screen bg-main-white">
       {/* Toggle button for mobile */}
@@ -17,14 +21,15 @@ export default function SettingsLayout({ children }: { children: ReactNode }) {
         onClick={toggleSidebar}
         className="block md:hidden p-2 fixed top-4 left-4 z-10"
       >
-        {isSidebarOpen ?
-         (<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="size-6">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+        {isSidebarOpen ? (
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="size-6">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
           </svg>
-        ) : 
-         (<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="size-6">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
-          </svg>)}
+        ) : (
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="size-6">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+          </svg>
+        )}
       </button>
 
       {/* Sidebar with buttons */}
@@ -35,7 +40,7 @@ export default function SettingsLayout({ children }: { children: ReactNode }) {
       >
         <ul className="mt-8">
           <li className="mb-3">
-            <Link href="/settings/account" className="flex space-x-2">
+            <Link href="/settings/account" className="flex space-x-2" onClick={closeSidebar}>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
@@ -54,7 +59,7 @@ export default function SettingsLayout({ children }: { children: ReactNode }) {
             </Link>
           </li>
           <li className="mb-3">
-            <Link href="/settings/accountprivacy" className="flex space-x-2">
+            <Link href="/settings/accountprivacy" className="flex space-x-2" onClick={closeSidebar}>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
@@ -73,7 +78,7 @@ export default function SettingsLayout({ children }: { children: ReactNode }) {
             </Link>
           </li>
           <li className="mb-3">
-            <Link href="/settings/notifications" className="flex space-x-2">
+            <Link href="/settings/notifications" className="flex space-x-2" onClick={closeSidebar}>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
@@ -92,7 +97,7 @@ export default function SettingsLayout({ children }: { children: ReactNode }) {
             </Link>
           </li>
           <li className="mb-3">
-            <Link href="/settings/help" className="flex space-x-2">
+            <Link href="/settings/help" className="flex space-x-2" onClick={closeSidebar}>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"

@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('about_users', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade'); // Foreign key to users table
+            $table->boolean('is_visible')->default(true);
             $table->string('level_of_education');
             $table->integer('points')->nullable();
             $table->timestamps();

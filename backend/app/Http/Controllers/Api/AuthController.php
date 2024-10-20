@@ -24,7 +24,7 @@ class AuthController extends Controller
         User::create([
             "email" => $request->email,
             "password" => Hash::make($request->password),
-            "role" => "user" 
+            "role" => "user"
         ]);
 
          // Log the user in
@@ -32,7 +32,7 @@ class AuthController extends Controller
             "email" => $request->email,
             "password" => $request->password
         ]);
-        
+
         $user = Auth::user();
         // Generate access token for the user
         $token = $user->createToken("userToken")->accessToken;
@@ -94,8 +94,8 @@ class AuthController extends Controller
 
     // Logout
     public function logout(){
-        
-        auth()->user()->token()->revoke();  
+
+        auth()->user()->token()->revoke();
         return response()->json([
             "status" => true,
             "message" => "User Logged out"
@@ -114,7 +114,7 @@ class AuthController extends Controller
             return response()->json([
                 "message" => "User Deleted"
             ]);
-                
+
         }catch (\Exception $e) { //vins noker eroru lai vins neaizskrien un nesaples man visu vietni
             return response()->json(['error' => $e->getMessage()], 500);
         }
@@ -149,26 +149,24 @@ class AuthController extends Controller
     }
     //funckija prieks leadboard dabun visus lietotajus ja daudz lietotaji bus varbut kkadu limitu uzlikt ka like 50 panem or smtn
     public function countsUsers(Request $request){
-        $users = \App\Models\User::select('users.id', 'users.email')
+        $users = User::select('users.id', 'users.email')
             ->orderBy('users.id', 'asc')
-            ->get(); 
-    
+            ->get();
+
         return response()->json([
-            "data" => $users->toArray(), 
+            "data" => $users->toArray(),
         ]);
     }
 
     public function index()
     {
-    $users = User::all();
-    return response()->json($users, 200);
+        $users = User::all();
+        return response()->json($users, 200);
     }
     public function destroy($id)
     {
-    $user = User::findOrFail($id);
-    $user->delete();
-    return response()->json(['message' => 'User deleted successfully!'], 200);
+        $user = User::findOrFail($id);
+        $user->delete();
+        return response()->json(['message' => 'User deleted successfully!'], 200);
     }
-
-
-}   
+}

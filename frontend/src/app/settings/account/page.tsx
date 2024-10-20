@@ -1,53 +1,35 @@
 'use client'
 import React from 'react';
+import axios from 'axios';
+import Link from 'next/link';
 
 export default function Settings() {
   const handleLogout = async () => {
     try {
-      const response = await fetch('/api/logout', {
-        method: 'POST',
+      const response = await axios.post('http://localhost:8000/api/logout', {}, {
         headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}`, // Replace with your token logic
+          'Authorization': `Bearer ${localStorage.getItem('userToken')}`,
         },
       });
 
-      const data = await response.json();
-
-      if (response.ok) {
-        alert(data.message); // Show success message
-        // Optionally, redirect or perform any cleanup after logout
-      } else {
-        alert(data.error || 'Failed to log out');
-      }
+      alert(response.data.message);
     } catch (error) {
       console.error('Error during logout:', error);
-      alert('Logout failed');
     }
   };
 
   const handleDeleteAccount = async () => {
     if (confirm('Are you sure you want to delete your account? This action cannot be undone.')) {
       try {
-        const response = await fetch('/api/user', {
-          method: 'DELETE',
+        const response = await axios.delete('http://localhost:8000/api/user', {
           headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${localStorage.getItem('token')}`, // Replace with your token logic
+            'Authorization': `Bearer ${localStorage.getItem('userToken')}`, // Replace with your token logic
           },
         });
 
-        const data = await response.json();
-
-        if (response.ok) {
-          alert(data.message); // Show success message
-          // Optionally, redirect or perform any cleanup after account deletion
-        } else {
-          alert(data.error || 'Failed to delete account');
-        }
+        alert(response.data.message);
       } catch (error) {
         console.error('Error during account deletion:', error);
-        alert('Account deletion failed');
       }
     }
   };
@@ -57,7 +39,9 @@ export default function Settings() {
       <h3 className="text-2xl font-bold">Account security</h3>
       <div>
         <p>Change your password here!</p>
-        <button className="text-sm underline mt-2">Proceed to password change</button>
+          <Link href="/forgot" className="text-sm underline mt-2">
+            Proceed to password change
+          </Link>
       </div>
       <div className="flex flex-col">
         <h3 className="text-xl font-bold">More</h3>
