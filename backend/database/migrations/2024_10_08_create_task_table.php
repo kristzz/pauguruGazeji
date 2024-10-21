@@ -17,7 +17,7 @@ return new class extends Migration
             $table->foreignId('subject_matter_id')->constrained('subject_matters')->onDelete('cascade'); // Link to subject_matters
             $table->string('name');
             $table->string('task_description');
-            $table->string('correct_answer')->nullable(); // Add nullable correct_answer
+            $table->string('correct_answer');// Add nullable correct_answer
             $table->timestamps();
         });
     }

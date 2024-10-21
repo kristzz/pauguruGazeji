@@ -50,7 +50,7 @@ export default function createTask() {
                 name: subjectMatterName,  
                 subject_matter_id: subjectMatterId ,
                 task_description: taskDescription,
-                taskAnswer: taskAnswer  
+                correct_answer: taskAnswer  
             },
             {
                 headers: {
