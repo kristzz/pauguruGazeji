@@ -8,25 +8,8 @@ export default function Home() {
   const [selectedSubjects, setSelectedSubjects] = useState([]);
   const [error, setError] = useState(null); // For error handling
   const [success, setSuccess] = useState(null); // For success messages
-  const [profile, setProfile] = useState({user: { id: 0}});
-
-  // Assuming these are the subjects and their IDs
-  const subjectsList = [
-    { id: 1, name: "Geometry" },
-    { id: 2, name: "Algebra" },
-    { id: 3, name: "Latvian" },
-    { id: 4, name: "English" },
-    { id: 5, name: "Chemistry" },
-    { id: 6, name: "Biology" },
-    { id: 7, name: "Physics" },
-    { id: 8, name: "Geography" },
-    { id: 9, name: "Art" },
-    { id: 10, name: "History" },
-    { id: 11, name: "Programming" },
-    { id: 12, name: "Literature" },
-    { id: 13, name: "Sports" },
-    { id: 14, name: "Business" },
-  ];
+  const [profile, setProfile] = useState({ user: { id: 0 } });
+  const [subjectsList, setSubjectsList] = useState([]); // Dynamic subject list
 
   // Toggle subject selection by ID
   const handleSubjectToggle = (subjectId) => {
@@ -41,50 +24,70 @@ export default function Home() {
 
   useEffect(() => {
     const fetchProfile = async () => {
-        try {
-          
-          const token = localStorage.getItem("userToken");
-          if (token) {
-              const response = await axios.get('http://127.0.0.1:8000/api/profile', {
-                  headers: {
-                      Authorization: `Bearer ${token}`
-                  }
-              });
-              setProfile(response.data.data); 
-          } else {
-              console.error("User is not authenticated.");
-          }
-        } catch (error) {
-            console.error("Error fetching profile:", error);
+      try {
+        const token = localStorage.getItem("userToken");
+        if (token) {
+          const response = await axios.get("http://127.0.0.1:8000/api/profile", {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+          setProfile(response.data.data);
+        } else {
+          console.error("User is not authenticated.");
         }
+      } catch (error) {
+        console.error("Error fetching profile:", error);
+      }
+    };
+
+    const fetchSubjects = async () => {
+      try {
+        const token = localStorage.getItem("userToken");
+        const response = await axios.get("http://127.0.0.1:8000/api/getSubjects", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        setSubjectsList(response.data.subjects); // Set the subjects from the backend
+      } catch (error) {
+        console.error("Error fetching subjects:", error);
+      }
     };
 
     fetchProfile();
-}, []);
+    fetchSubjects(); // Fetch subjects on mount
+  }, []);
 
   // Submit the selected subject IDs to the backend using Axios
   const handleSubmit = async () => {
     const token = localStorage.getItem("userToken"); // Get the token from localStorage
     const userId = profile.user.id;
-    console.log('Submitting subjects for user ID:', userId);
+    console.log("Submitting subjects for user ID:", userId);
     try {
-      const response = await axios.post('http://127.0.0.1:8000/api/about-you/subjects', {
-        subjects: selectedSubjects,
-        user_id: userId,
-      }, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          'Content-Type': 'application/json',
+      const response = await axios.post(
+        "http://127.0.0.1:8000/api/about-you/subjects",
+        {
+          subjects: selectedSubjects,
+          user_id: userId,
         },
-      });
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
 
-      
       if (response.status === 200) {
         setSuccess(true); // Show success modal
       }
     } catch (error) {
       setError(error.response?.data?.message || "Error submitting subjects."); // Handle error
-      console.error('Error submitting subjects:', error.response?.data?.message || error.message);
+      console.error(
+        "Error submitting subjects:",
+        error.response?.data?.message || error.message
+      );
     }
   };
 
@@ -105,7 +108,7 @@ export default function Home() {
             Specify the subjects you want to study
           </p>
           <div className="flex flex-row flex-wrap w-64 mt-4">
-            {subjectsList.map(subject => (
+            {subjectsList.map((subject) => (
               <SubjectButton
                 key={subject.id}
                 label={subject.name}
@@ -118,33 +121,35 @@ export default function Home() {
       </div>
 
       <div className="flex flex-col items-center">
-        
         <button
           id="cycleButton"
           onClick={handleSubmit}
-          className="bg-main-red text-main-white w-40 h-12 rounded-lg mt-14 text-lg">
+          className="bg-main-red text-main-white w-40 h-12 rounded-lg mt-14 text-lg"
+        >
           Next
         </button>
         {/* Display error or success messages */}
         {error && <p className="text-red-500 mt-4">{error}</p>}
         {success && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-white p-6 rounded-lg shadow-lg text-center">
-            <h2 className="text-2xl font-semibold mb-4 text-main-blue">Success!</h2>
-            <p className="mb-2">Your information has been submitted successfully!</p>
-            <p className="mb-2">Please verify your email.</p>
-            <button
-              className="bg-main-red text-main-white w-32 h-10 rounded-lg"
-              onClick={() => {
-                setSuccess(false); // Close the modal
-                router.push("/"); // Navigate back home
-              }}
-            >
-              Ok
-            </button>
+          <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+            <div className="bg-white p-6 rounded-lg shadow-lg text-center">
+              <h2 className="text-2xl font-semibold mb-4 text-main-blue">
+                Success!
+              </h2>
+              <p className="mb-2">Your information has been submitted successfully!</p>
+              <p className="mb-2">Please verify your email.</p>
+              <button
+                className="bg-main-red text-main-white w-32 h-10 rounded-lg"
+                onClick={() => {
+                  setSuccess(false); // Close the modal
+                  router.push("/"); // Navigate back home
+                }}
+              >
+                Ok
+              </button>
+            </div>
           </div>
-        </div>
-      )}
+        )}
       </div>
     </div>
   );

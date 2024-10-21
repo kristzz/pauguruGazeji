@@ -102,4 +102,11 @@ class AboutYouController extends Controller
 
         return response()->json(['message' => 'Profile visibility updated successfully.']);
     }
+
+    public function getSubjects(Request $request)
+    {
+        return response()->json([
+            'subjects' => Subject::all()
+        ]);
+    }
 }
