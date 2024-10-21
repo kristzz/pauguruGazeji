@@ -33,7 +33,7 @@ export default function Signin() {
 
             // Optionally redirect the user after login
             setTimeout(() => {
-                router.push('/dashboard'); // Redirect to dashboard after success
+                router.push('/tasks'); // Redirect to dashboard after success
             }, 1500); // Redirect after 1.5 seconds for a smoother user experience
         } else {
             // Handle failed login attempt by displaying the error message
