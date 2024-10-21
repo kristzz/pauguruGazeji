@@ -42,6 +42,7 @@ class DatabaseSeeder extends Seeder
             'age' => 25,
             'email' => 'test@test.com', // Specific email
             'password' => Hash::make('testtest'),
+            'email_verified_at' => now(),
         ]);
     
         // Create AboutUser for the default user
