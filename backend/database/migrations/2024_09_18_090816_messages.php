@@ -17,6 +17,7 @@ return new class extends Migration
             $table->text('content');
             $table->text('subject')->nullable();
             $table->string('task_answer')->nullable();
+            $table->enum('sender', ['app', 'user'])->default('app');
             $table->timestamps();
             $table->boolean('isSolved')->default(false);
         });

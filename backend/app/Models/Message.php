@@ -19,6 +19,7 @@ class Message extends Model
         'content',
         'subject',
         'task_answer',  // Add task_answer to the fillable array
+        'sender',
     ];
 
     /**

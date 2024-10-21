@@ -70,7 +70,8 @@
             Message::create([
                 "user_id" => Auth::id(),
                 "content" => $request->content,
-                "subject" => $request->subject
+                "subject" => $request->subject,
+                "sender" => $request->sender
             ]);
         
             return response()->json([

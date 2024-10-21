@@ -84,7 +84,8 @@ export default function Tasks() {
         try {
             const token = localStorage.getItem('userToken'); // Get the token from local storage
             const response = await axios.post('http://127.0.0.1:8000/api/convertTaskToMessage', {
-                task_id: currentTask.task_id,  
+                task_id: currentTask.task_id, 
+                sender: 'app'
             },
             {
                 headers: {
