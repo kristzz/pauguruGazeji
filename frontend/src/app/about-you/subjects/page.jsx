@@ -8,7 +8,7 @@ export default function Home() {
   const [selectedSubjects, setSelectedSubjects] = useState([]);
   const [error, setError] = useState(null); // For error handling
   const [success, setSuccess] = useState(null); // For success messages
-  const [profile, setProfile] = useState("");
+  const [profile, setProfile] = useState({user: { id: 0}});
 
   // Assuming these are the subjects and their IDs
   const subjectsList = [
@@ -65,7 +65,7 @@ export default function Home() {
   // Submit the selected subject IDs to the backend using Axios
   const handleSubmit = async () => {
     const token = localStorage.getItem("userToken"); // Get the token from localStorage
-    const userId = profile.id;
+    const userId = profile.user.id;
     console.log('Submitting subjects for user ID:', userId);
     try {
       const response = await axios.post('http://127.0.0.1:8000/api/about-you/subjects', {

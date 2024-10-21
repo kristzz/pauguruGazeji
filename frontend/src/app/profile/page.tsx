@@ -4,7 +4,7 @@ import axios from 'axios';
 import Link from 'next/link';
 
 export default function Profile() {
-    const [profile, setProfile] = useState({ name: '', email: '' });
+    const [profile, setProfile] = useState({  user: { name: '', email: '' }, about_user: { points: 0, level_of_education:'' }  });
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
@@ -74,8 +74,8 @@ export default function Profile() {
             <div className=" rounded-lg p-8 w-full max-w-md mx-auto">
                 {/* Profile Header */}
                 <div className="text-center mb-6 mt-12">
-                    <h1 className="text-3xl font-semibold text-main-blue">{profile.name}</h1>
-                    <p className="text-gray-600 mt-2">{profile.email}</p>
+                    <h1 className="text-3xl font-semibold text-main-blue">{profile.user.name}</h1>
+                    <p className="text-gray-600 mt-2">{profile.user.email}</p>
                 </div>
 
                 {/* Divider */}
@@ -83,8 +83,8 @@ export default function Profile() {
 
                 {/* Profile Details */}
                 <div className="space-y-4 text-center">
-                    <p className="text-gray-700">High School Education</p>
-                    <p className="text-gray-700">Points: 204</p>
+                    <p className="text-gray-700">{profile.about_user.level_of_education}</p>
+                    <p className="text-gray-700">Points: {profile.about_user.points}</p>
                 </div>
 
                 {/* Divider */}
