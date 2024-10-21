@@ -11,7 +11,7 @@ export default function Tasks() {
     const [touchStart, setTouchStart] = useState(null);
     const [touchEnd, setTouchEnd] = useState(null);
     const [boxPosition, setBoxPosition] = useState(0);
-
+    const [task_id, settask_id] = useState(0);
 
     useEffect(() => {
         const fetchUserProfile = async () => {
@@ -65,8 +65,9 @@ export default function Tasks() {
 
             if (distance > 150) {
                 console.log('swiped right');
-
+                handleSwipeRight();
                 setCurrentIndex((prevIndex) => (prevIndex < tasks.length - 1 ? prevIndex + 1 : prevIndex));
+               
             } else if (distance < -150) {
                 console.log('swiped left');
                 setCurrentIndex((prevIndex) => (prevIndex < tasks.length - 1 ? prevIndex + 1 : prevIndex));
@@ -78,6 +79,24 @@ export default function Tasks() {
     };
 
     const currentTask = tasks.length > 0 ? tasks[currentIndex] : null; // Get the current task based on index
+
+    const handleSwipeRight = async () => {
+        try {
+            const token = localStorage.getItem('userToken'); // Get the token from local storage
+            const response = await axios.post('http://127.0.0.1:8000/api/convertTaskToMessage', {
+                task_id: currentTask.task_id,  
+            },
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`  
+                }
+            }
+            );
+            router.push('messages');
+        } catch (error) {
+            console.error('Error fetching profile:', error);
+        }
+    };
 
     const handleCreateTask = () => {
         router.push('/data-entry/create-task') 

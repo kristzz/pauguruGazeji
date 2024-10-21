@@ -77,7 +77,7 @@ export default function createTask() {
             <div className="bg-main-red h-screen w-screen flex flex-col items-center relative">
                 <div className="bg-main-blue w-screen h-[50%] absolute inset-x-0 bottom-0"></div>
                 <div className="bg-main-white w-[65%] h-[50%] shadow-2xl relative top-[20%] rounded-lg align-center border-2 text-center p-2">
-                Create Subject Matters
+                Create Task
                     <form onSubmit={handleSubmit} className="flex flex-col items-center">
                         <input
                             type="text"
@@ -123,7 +123,7 @@ export default function createTask() {
                             type="submit"
                             className="bg-main-blue text-white px-4 py-2 rounded-lg mt-4"
                         >
-                            Create Subject
+                            Create Task
                         </button>
                     </form>
                 </div>
