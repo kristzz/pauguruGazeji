@@ -5,33 +5,63 @@
     use Illuminate\Http\Request;
     use App\Models\AboutUser; 
     use Illuminate\Support\Facades\Auth;
+    use Illuminate\Http\JsonResponse; // Ensure this is included
 
     class MessageController extends Controller
     {
         public function awardPoints()
         {
-            // Get the authenticated user's ID
+           
             $userId = Auth::id();
         
-            \Log::info("Awarding points for user ID: {$userId}"); // Log the user ID
+            \Log::info("Awarding points for user ID: {$userId}"); 
         
-            // Find the AboutUser record for the authenticated user
             $aboutUser = AboutUser::where('user_id', $userId)->first();
         
             if ($aboutUser) {
-                // Increment points by 1
-                $aboutUser->increment('points', 1); // Using Eloquent's increment method
-                \Log::info("Points awarded. New points total: {$aboutUser->points}");
+       
+                $aboutUser->increment('points', 1); 
             } else {
                 \Log::warning("No AboutUser found for user ID: {$userId}");
             }
         }
 
+        public function markMessageAsSolved(Request $request): JsonResponse
+        {
+            
+            $request->validate([
+                'id' => 'required|integer|exists:messages,id', 
+            ]);
+        
+            $messageId = $request->input('id'); 
+        
+            $message = Message::where('id', $messageId)->where('user_id', Auth::id())->first();
+        
+            if (!$message) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Message not found or you do not have permission to update it.',
+                ], 404);
+            }
+        
+       
+            $message->isSolved = true;
+            $message->save();
+        
+            return response()->json([
+                'status' => true,
+                'message' => 'Message marked as solved.',
+                'data' => $message
+            ]);
+        }
+        
+        
+        
 
         
         public function postMessage(Request $request)
         {  
-            // Usual validation and message creation
+            
             $request->validate([
                 "content" => "required",
                 "subject" => "required",
@@ -49,22 +79,37 @@
             ]);
         }
         
-        public function getMessageFrom(Request $request)
-        {
-            $subject = $request->input('subject');
-            $userId = Auth::id();
-            
-            // Fetch messages including 'task_answer'
-            $messages = Message::where('user_id', $userId)
-                                ->where('subject', $subject)
-                                ->get(['id', 'content', 'created_at', 'task_answer']); // Select task_answer too
         
-            return response()->json([
-                'status' => true,
-                'messages' => $messages
-            ]);
-        }
-        
+public function getMessageFrom(Request $request)
+{
+    $subject = $request->input('subject');
+    $userId = Auth::id();
+    
+    // Fetch the latest completed task's answer
+    $lastCompletedTask = Message::where('user_id', $userId)
+                                 ->whereNotNull('task_answer') // Ensure it's a task message
+                                 ->where('content', '!=', '') // Exclude empty content
+                                 ->latest('created_at')
+                                 ->first();
+    
+    // Fetch messages based on the current subject
+    $messages = Message::where('user_id', $userId)
+                        ->where('subject', $subject)
+                        ->get(['id', 'content', 'created_at', 'task_answer']);
+
+    // Filter messages to only show if the last task has been completed
+    if ($lastCompletedTask && $lastCompletedTask->task_answer) {
+        return response()->json([
+            'status' => true,
+            'messages' => $messages
+        ]);
+    } else {
+        return response()->json([
+            'status' => true,
+            'messages' => $messages->where(fn($msg) => !$msg->task_answer) // Show messages without task_answer if no previous task is completed
+        ]);
+    }
+}
 
         public function getLastMessageFrom()
         {
