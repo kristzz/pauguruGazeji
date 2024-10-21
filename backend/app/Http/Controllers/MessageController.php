@@ -3,10 +3,32 @@
 
     use App\Models\Message;
     use Illuminate\Http\Request;
+    use App\Models\AboutUser; 
     use Illuminate\Support\Facades\Auth;
 
     class MessageController extends Controller
     {
+        public function awardPoints()
+        {
+            // Get the authenticated user's ID
+            $userId = Auth::id();
+        
+            \Log::info("Awarding points for user ID: {$userId}"); // Log the user ID
+        
+            // Find the AboutUser record for the authenticated user
+            $aboutUser = AboutUser::where('user_id', $userId)->first();
+        
+            if ($aboutUser) {
+                // Increment points by 1
+                $aboutUser->increment('points', 1); // Using Eloquent's increment method
+                \Log::info("Points awarded. New points total: {$aboutUser->points}");
+            } else {
+                \Log::warning("No AboutUser found for user ID: {$userId}");
+            }
+        }
+
+
+        
         public function postMessage(Request $request)
         {  
             // Usual validation and message creation
@@ -27,18 +49,22 @@
             ]);
         }
         
-
         public function getMessageFrom(Request $request)
         {
             $subject = $request->input('subject');
             $userId = Auth::id();
-            $messages = Message::where('user_id', $userId)->where('subject', $subject)->get();
-
+            
+            // Fetch messages including 'task_answer'
+            $messages = Message::where('user_id', $userId)
+                                ->where('subject', $subject)
+                                ->get(['id', 'content', 'created_at', 'task_answer']); // Select task_answer too
+        
             return response()->json([
                 'status' => true,
                 'messages' => $messages
             ]);
         }
+        
 
         public function getLastMessageFrom()
         {
@@ -66,9 +92,9 @@
             $subject = $request->input('subject'); // Getting the subject from the request
     
             $lastMessage = Message::where('user_id', $userId)
-                                  ->where('subject', $subject)
-                                  ->latest('created_at')
-                                  ->first();
+                                ->where('subject', $subject)
+                                ->latest('created_at')
+                                ->first();
     
             if ($lastMessage) {
                 return response()->json([
@@ -127,8 +153,8 @@
             $subjectMatterId = $request->input('subject_matter_id');
         
             $lastTask = Tasks::where('subject_matter_id', $subjectMatterId)
-                             ->orderBy('created_at', 'desc')
-                             ->first();
+                            ->orderBy('created_at', 'desc')
+                            ->first();
         
             if (!$lastTask) {
                 return response()->json([
