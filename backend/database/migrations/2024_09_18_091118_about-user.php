@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade'); // Foreign key to users table
             $table->boolean('is_visible')->default(true);
             $table->string('level_of_education');
-            $table->integer('points')->nullable();
+            $table->integer('points')->default(0);
             $table->timestamps();
         });
     }

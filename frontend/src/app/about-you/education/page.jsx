@@ -11,7 +11,7 @@ export default function Home() {
   });
   const [userId, setUserId] = useState(null);
   const [error, setError] = useState("");
-  const [profile, setProfile] = useState("");
+  const [profile, setProfile] = useState({user: { id: 0}});
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -51,7 +51,7 @@ export default function Home() {
       setError("Please select your education level.");
       return;
   }
-    if (!profile.id) {
+    if (!profile.user.id) {
         setError("User ID not found.");
         return;
     }
@@ -59,7 +59,7 @@ export default function Home() {
     try {
         const token = localStorage.getItem("userToken");
         const response = await axios.post("http://127.0.0.1:8000/api/about-you/education", {
-          user_id: profile.id, // Change id to user_id
+          user_id: profile.user.id, // Change id to user_id
           level_of_education: formData.education,
         }, {
             headers: {

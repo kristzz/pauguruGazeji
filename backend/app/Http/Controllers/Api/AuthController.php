@@ -117,7 +117,10 @@ class AuthController extends Controller
         return response()->json([
             "status" => true,
             "message" => "Profile information",
-            "data" => $user
+            "data" => [
+                'user' => $user, // User data
+                'about_user' => $user->aboutUser, // AboutUser data
+            ]
         ]);
     }
 
