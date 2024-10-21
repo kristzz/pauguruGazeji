@@ -28,13 +28,11 @@ export default function Signin() {
             console.log('Login successful:', response.data);
             localStorage.setItem('userToken', response.data.token);
 
-            // Show an alert instead of a success message
-            alert('Login successful! Redirecting to your dashboard...');
 
             // Optionally redirect the user after login
             setTimeout(() => {
-                router.push('/dashboard'); // Redirect to dashboard after success
-            }, 1500); // Redirect after 1.5 seconds for a smoother user experience
+                router.push('/profile'); // Redirect to dashboard after success
+            }, 500); // Redirect after 1.5 seconds for a smoother user experience
         } else {
             // Handle failed login attempt by displaying the error message
             setError(response.data.message || 'Invalid login details.');
@@ -106,7 +104,7 @@ export default function Signin() {
                 className="bg-main-blue text-main-white text-lg rounded-lg h-12 w-64"
                 disabled={loading} // Disable button during loading
               >
-                {loading ? 'Signing in...' : 'Sign in'}  {/* Show loading state */}
+                {loading ? 'Logging in...' : 'Log In'}  {/* Show loading state */}
               </button>
             </div>
 
