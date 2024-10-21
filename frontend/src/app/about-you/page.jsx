@@ -9,9 +9,9 @@ export default function Home() {
     name: "",
     surname: "",
     age: "",
-    gender: "",
+    gender: ""
   });
-  const [userId, setUserId] = useState(null);
+  const [userId, setUserId] = useState({user: { id: 0}});
   const [error, setError] = useState("");
   const router = useRouter();
   const [profile, setProfile] = useState("");
@@ -48,7 +48,7 @@ export default function Home() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!profile.id) {
+    if (!profile.user.id) {
         setError("User ID not found.");
         return;
     }
@@ -56,7 +56,7 @@ export default function Home() {
     try {
         const token = localStorage.getItem("userToken");
         const response = await axios.post("http://127.0.0.1:8000/api/about-you", {
-            id: profile.id, // Use dynamic user ID
+            id: profile.user.id, // Use dynamic user ID
             ...formData,
         }, {
             headers: {

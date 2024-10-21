@@ -40,5 +40,6 @@ Route::middleware('auth:api')->group(function () {
     Route::get('/user-certificates', [CertificateController::class, 'getUserCertificates']);
     Route::get('/settings', [SettingsController::class, 'getSettings']);
     Route::post('/settings', [SettingsController::class, 'updateSettings']);
+    Route::get('/getSubjects', [AboutYouController::class, 'getSubjects']);
 });
 
