@@ -18,6 +18,7 @@ class Message extends Model
         'user_id',
         'content',
         'subject',
+        'task_answer',  // Add task_answer to the fillable array
     ];
 
     /**

@@ -15,11 +15,12 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade'); // Foreign key to users table
             $table->text('content');
+            $table->text('subject')->nullable();
+            $table->string('task_answer')->nullable(); // Nullable field for task answer
             $table->timestamps();
-
-            $table->text('subject')->nullable();    
         });
     }
+    
     /**
      * Reverse the migrations.
      */

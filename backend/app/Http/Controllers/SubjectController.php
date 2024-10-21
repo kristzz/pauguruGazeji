@@ -4,11 +4,12 @@ namespace App\Http\Controllers;
 
 use Illuminate\Validation\ValidationException;
 
+use Illuminate\Support\Facades\Auth;
 
 use App\Models\Subject;
 use App\Models\SubjectMatter;
 use App\Models\Tasks; 
-
+use App\Models\Message;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 
@@ -129,5 +130,47 @@ public function getLastTask(Request $request): JsonResponse
     ], 404);
 }
 
+public function convertTaskToMessage(Request $request)
+{
+  
+    $request->validate([
+        'task_id' => 'required|exists:tasks,id',
+    ]);
+    $task = Tasks::find($request->task_id);
 
+    if (!$task) {
+        return response()->json([
+            'status' => false,
+            'message' => 'Task not found'
+        ]);
+    }
+    $subjectMatter = SubjectMatter::find($task->subject_matter_id);
+
+    if (!$subjectMatter) {
+        return response()->json([
+            'status' => false,
+            'message' => 'Subject matter not found'
+        ]);
+    }
+    $subject = Subject::find($subjectMatter->subject_id);
+
+    if (!$subject) {
+        return response()->json([
+            'status' => false,
+            'message' => 'Subject not found'
+        ]);
+    }
+  $message = Message::create([
+        'user_id' => Auth::id(),
+        'content' => $task->task_description,
+        'subject' => $subject->name,         
+        'task_answer' => $task->correct_answer
+    ]);
+
+    return response()->json([
+        'status' => true,
+        'message' => 'Task converted to message successfully',
+        'data' => $message
+    ]);
+}
 }

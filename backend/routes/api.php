@@ -38,7 +38,7 @@ Route::get('/getLastMessageFrom', [MessageController::class, 'getLastMessageFrom
 Route::post('/createSubjectMatter', [SubjectController::class, 'createSubjectMatter']);
 Route::post('/createTask', [SubjectController::class, 'createTask']);
 
-
+Route::post('/convertTaskToMessage', [SubjectController::class, 'convertTaskToMessage']);   
 Route::post('/getLastTask', [SubjectController::class, 'getLastTask']);
 
 Route::get('/getUserTasks', [AuthController::class, 'getUserTasks']);
@@ -46,3 +46,5 @@ Route::get('/getUserTasks', [AuthController::class, 'getUserTasks']);
 Route::post('/createSubject', [SubjectController::class, 'createSubject']);
 Route::post('/getSubjectByName', [SubjectController::class, 'getSubjectByName']);
 Route::post('/getSubjectMatterByName', [SubjectController::class, 'getSubjectMatterByName']);
+
+
