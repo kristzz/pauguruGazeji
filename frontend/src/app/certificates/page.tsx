@@ -1,7 +1,9 @@
 'use client';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
+import html2canvas from 'html2canvas';
+import { jsPDF } from 'jspdf';
 
 // Define the type for a Certificate
 interface Certificate {
@@ -16,6 +18,7 @@ export default function Certificates() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const router = useRouter();
+    const certificateRef = useRef<HTMLDivElement>(null);  // Create a ref for the certificate design
 
     // Fetch certificates when the component mounts
     useEffect(() => {
@@ -38,6 +41,24 @@ export default function Certificates() {
 
         fetchCertificates();
     }, []);
+
+    // Function to export the certificate as PDF
+    const exportToPdf = async () => {
+        const certificateElement = certificateRef.current;
+
+        if (certificateElement) {
+            const canvas = await html2canvas(certificateElement);
+            const imgData = canvas.toDataURL('image/png');
+            const pdf = new jsPDF({
+                orientation: 'portrait',
+                unit: 'pt',
+                format: [canvas.width, canvas.height],
+            });
+
+            pdf.addImage(imgData, 'PNG', 0, 0, canvas.width, canvas.height);
+            pdf.save('certificate.pdf');
+        }
+    };
 
     if (loading) {
         return (
@@ -67,7 +88,7 @@ export default function Certificates() {
                 <div className='flex flex-col mt-4 md:flex-row md:flex-wrap md:justify-center'>
                     {certificates.length > 0 ? (
                         certificates.map((certificate) => (
-                            <div key={certificate.id} className='h-96 md:w-80 rounded-lg bg-main-blue ml-6 mr-6 mb-6 text-center'>
+                            <div key={certificate.id} ref={certificateRef} className='h-96 md:w-80 rounded-lg bg-main-blue ml-6 mr-6 mb-6 text-center'>
                                 <p className='text-main-white mt-6 text-xl'>Certificate</p>
                                 <div className='bg-main-white w-36 h-36 rounded-full mx-auto mt-4 text-center flex flex-col'>
                                     <p className='mt-auto mb-auto text-6xl text-main-blue'>50</p>
@@ -87,6 +108,12 @@ export default function Certificates() {
                                 <p className='text-main-white mt-2 text-base'>
                                     You have earned 50 points in {certificate.subject ? certificate.subject.name : 'Unknown Subject'}
                                 </p>
+                                <button
+                                    onClick={exportToPdf}
+                                    className="bg-main-white text-main-blue px-4 py-2 rounded-lg mt-4"
+                                >
+                                    Export to PDF
+                                </button>
                             </div>
                         ))
                     ) : (
