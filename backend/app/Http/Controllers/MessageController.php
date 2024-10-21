@@ -14,7 +14,7 @@
            
             $userId = Auth::id();
         
-            \Log::info("Awarding points for user ID: {$userId}"); 
+            Log::info("Awarding points for user ID: {$userId}"); 
         
             $aboutUser = AboutUser::where('user_id', $userId)->first();
         
@@ -22,7 +22,7 @@
        
                 $aboutUser->increment('points', 1); 
             } else {
-                \Log::warning("No AboutUser found for user ID: {$userId}");
+                Log::warning("No AboutUser found for user ID: {$userId}");
             }
         }
 
@@ -60,25 +60,29 @@
 
         
         public function postMessage(Request $request)
-        {  
-            
-            $request->validate([
-                "content" => "required",
-                "subject" => "required",
-            ]);
-            
-            Message::create([
-                "user_id" => Auth::id(),
-                "content" => $request->content,
-                "subject" => $request->subject,
-                "sender" => $request->sender
-            ]);
-        
-            return response()->json([
-                "status" => true,
-                "message" => "Message created successfully"
-            ]);
-        }
+{  
+    // Validate required fields
+    $request->validate([
+        'content' => 'required',
+        'subject' => 'required',
+        'isSolved' => 'boolean', 
+    ]);
+    
+   
+    Message::create([
+        'user_id' => Auth::id(),          
+        'content' => $request->content,   
+        'subject' => $request->subject,   
+        'sender' => $request->sender,     
+        'isSolved' => $request->isSolved  
+    ]);
+
+    
+    return response()->json([
+        'status' => true,
+        'message' => 'Message created successfully',
+    ]);
+}
         
         
 public function getMessageFrom(Request $request)

@@ -24,20 +24,10 @@ class DatabaseSeeder extends Seeder
             'Programming', 'Literature', 'Sports', 'Business'
         ];
 
-        // Create subjects
-        foreach ($subjects as $subjectName) {
-            $subject = Subject::create(['name' => $subjectName]);
+    
+       
 
-            // Assign multiple subject matters to each subject
-            foreach (range(1, 3) as $i) {
-                SubjectMatter::create([
-                    'name' => "Subject Matter $i for $subjectName",
-                    'subject_id' => $subject->id,  // Link to the subject
-                ]);
-            }
-        }
-
-        // Create 10 Users, AboutUser records, Messages and Assign random subjects to AboutUsers
+        
         User::factory()->count(10)->create()->each(function ($user) {
             // Create an AboutUser for each user
             $aboutUser = AboutUser::factory()->create([
@@ -53,5 +43,17 @@ class DatabaseSeeder extends Seeder
                 'user_id' => $user->id,
             ]);
         });
+        foreach ($subjects as $index => $subject) {
+            
+            $subjectModel = Subject::where('name', $subject)->first();
+
+            if ($subjectModel) {
+                
+                SubjectMatter::create([
+                    'name' => $subject . ' Matter', 
+                    'subject_id' => $subjectModel->id,
+                ]);
+            }
+        }
     }
 }

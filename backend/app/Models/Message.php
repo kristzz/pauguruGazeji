@@ -9,27 +9,21 @@ class Message extends Model
 {
     use HasFactory;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
-     */
     protected $fillable = [
         'user_id',
         'content',
         'subject',
-        'task_answer',  // Add task_answer to the fillable array
         'sender',
+        'isSolved'  
     ];
 
-    /**
-     * Inverse One-to-Many relationship with User.
-     * A message belongs to a user.
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
+    protected $casts = [
+        'isSolved' => 'boolean',  
+    ];
+
     public function user()
     {
         return $this->belongsTo(User::class);
     }
 }
+

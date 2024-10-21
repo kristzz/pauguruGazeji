@@ -135,6 +135,7 @@ public function convertTaskToMessage(Request $request)
   
     $request->validate([
         'task_id' => 'required|exists:tasks,id',
+        'sender' => 'required',
     ]);
     $task = Tasks::find($request->task_id);
 

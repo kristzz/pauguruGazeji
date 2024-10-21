@@ -9,6 +9,8 @@ interface Message {
     content: string;
     created_at: string;
     task_answer: string | null; // Include task_answer field
+    sender: string; // 'user' or 'system' for task messages
+    isSolved: boolean; // Add isSolved field
 }
 
 export default function Chat() {
@@ -16,8 +18,6 @@ export default function Chat() {
     const [newMessage, setNewMessage] = useState<string>(''); // New message input state
     const [error, setError] = useState<string | null>(null);  // Error state
     const [loading, setLoading] = useState<boolean>(true);    // Loading state
-    const [currentBlueMessageIndex, setCurrentBlueMessageIndex] = useState<number | null>(null); // State to track current blue message
-    const [solvedMessageIds, setSolvedMessageIds] = useState<Set<number>>(new Set()); // Track solved message IDs
     const router = useRouter();
     const searchParams = useSearchParams(); // For query parameters
 
@@ -42,18 +42,12 @@ export default function Chat() {
                     subject // Pass subject as a query parameter
                 }
             });
-
             console.log('Messages:', response.data.messages);  
-            setMessages(response.data.messages);  // Set fetched messages
-
-            // Find the first blue message that hasn't been solved
-            const blueMessages = response.data.messages.filter(msg => msg.task_answer && !solvedMessageIds.has(msg.id));
-            if (blueMessages.length > 0) {
-                const firstBlueIndex = response.data.messages.findIndex(msg => msg.id === blueMessages[0].id);
-                setCurrentBlueMessageIndex(firstBlueIndex); // Show the first unsolved blue message
-            } else {
-                setCurrentBlueMessageIndex(null); // No more unsolved blue messages to show
-            }
+            
+            // Filter out messages where isSolved is true
+            const filteredMessages = response.data.messages.filter((msg: Message) => !msg.isSolved);
+            
+            setMessages(filteredMessages);  // Set filtered messages
         } catch (error) {
             console.error('Fetching messages failed:', error); 
             setError('Failed to load messages.');
@@ -76,36 +70,37 @@ export default function Chat() {
         }
 
         try {
-            const currentMessage = messages[currentBlueMessageIndex!]; // Get current blue message
-            const correctAnswer = currentMessage?.task_answer?.toLowerCase();
+            const Subjectresponse = await api.post('http://127.0.0.1:8000/api/getSubjectByName', {
+                name: subject
+            });
+            console.log(Subjectresponse.data);
+            printMessages();
+            const subjectId = Subjectresponse.data.id; 
 
-            // Check if the answer is correct
-            if (correctAnswer && correctAnswer === newMessage.toLowerCase()) {
-                alert('Correct answer!');
-                setNewMessage(''); // Clear the input field
-
-                // Mark the message as solved in the backend
-                await api.post('/api/markMessageAsSolved', { id: currentMessage.id }, {
+            const PostMessageresponse = await api.post('http://127.0.0.1:8000/api/postMessage', {
+                    content: newMessage,  
+                    subject: subjectId,
+                    sender: 'user', 
+                    isSolved: false
+                },
+                {
                     headers: {
-                        Authorization: `Bearer ${token}`
+                        Authorization: `Bearer ${token}`  
                     }
                 });
+            console.log('Message successful:', PostMessageresponse.data);
 
-                // Update solved message IDs
-                setSolvedMessageIds(prev => new Set(prev).add(currentMessage.id));
+            // Check if the message matches any task_answer from the fetched messages
+            const correctMessage = messages.find(msg => msg.task_answer && msg.task_answer.toLowerCase() === newMessage.toLowerCase());
 
-                // Move to the next blue message
-                const blueMessages = messages.filter(msg => msg.task_answer && !solvedMessageIds.has(msg.id));
-                if (blueMessages.length > 0) {
-                    const nextBlueIndex = messages.findIndex(msg => msg.id === blueMessages[0].id);
-                    setCurrentBlueMessageIndex(nextBlueIndex);
-                } else {
-                    setCurrentBlueMessageIndex(null); // No more unsolved blue messages
-                    alert('Congratulations! You have solved all tasks.'); // Notify the user
-                }
-            } else {
+            if (correctMessage) {
+                alert('Correct answer!');
+            } else if (messages.some(msg => msg.task_answer)) {
                 alert('Incorrect answer. Try again.');
             }
+
+            setNewMessage('');  // Clear the input field
+            printMessages();    // Re-fetch messages
         } catch (error) {
             console.error('Posting message failed:', error); 
             setError('Failed to post message.');
@@ -123,9 +118,6 @@ export default function Chat() {
             postMessage();
         }
     };
-
-    // Check if all messages are solved
-    const allMessagesSolved = messages.every(msg => !msg.task_answer || solvedMessageIds.has(msg.id));
 
     return (
         <main id="logs" className="bg-main-red h-screen w-screen flex flex-col items-center justify-center">
@@ -145,49 +137,29 @@ export default function Chat() {
                         <p>Loading messages...</p>  // Loading state
                     ) : error ? (
                         <p className="text-red-500">{error}</p> // Error state
-                    ) : allMessagesSolved ? ( // Check if all messages are solved
-                        <div className="flex flex-col w-full p-2 m-1 rounded-md text-black bg-blue-200">
-                            <p className="text-center">Everything is solved, good job!</p> {/* Congratulatory message */}
-                        </div>
                     ) : messages.length > 0 ? (
-                        <>
-                            {messages.map((msg, index) => (
-                                <div 
-                                    key={msg.id} 
-                                    className={`flex flex-col w-full p-2 m-1 rounded-md text-black ${msg.task_answer ? 'bg-blue-200' : 'bg-gray-100'}`}
-                                    style={{ display: msg.task_answer && index === currentBlueMessageIndex ? 'block' : 'none' }} // Show only the current blue message
-                                >
-                                    <div className="flex justify-between items-start">
-                                        <div className="flex-1 pr-4 overflow-hidden"> 
-                                            <p className="whitespace-pre-wrap break-words">
-                                                {msg.content}
+                        messages.map((msg) => (
+                            <div 
+                                key={msg.id} 
+                                className={`flex flex-col w-full p-2 m-1 rounded-md text-black ${msg.sender === 'system' ? 'bg-blue-200' : 'bg-gray-100'}`} // Blue background for task messages
+                            >
+                                <div className="flex justify-between items-start">
+                                    <div className="flex-1 pr-4 overflow-hidden"> 
+                                        <p className="whitespace-pre-wrap break-words">
+                                            {msg.content}
+                                        </p>
+                                        {msg.task_answer && (
+                                            <p className="text-sm text-gray-500">
+                                                <strong>Task Answer:</strong> {msg.task_answer}
                                             </p>
-                                        </div>
-                                        <span className="text-gray-400 text-sm whitespace-nowrap ml-2 self-end">
-                                            {new Date(msg.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                                        </span>
+                                        )}
                                     </div>
+                                    <span className="text-gray-400 text-sm whitespace-nowrap ml-2 self-end">
+                                        {new Date(msg.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                    </span>
                                 </div>
-                            ))}
-                            {/* Render non-blue messages normally */}
-                            {messages.filter(msg => !msg.task_answer).map((msg) => (
-                                <div 
-                                    key={msg.id} 
-                                    className={`flex flex-col w-full p-2 m-1 rounded-md text-black bg-gray-100`}
-                                >
-                                    <div className="flex justify-between items-start">
-                                        <div className="flex-1 pr-4 overflow-hidden"> 
-                                            <p className="whitespace-pre-wrap break-words">
-                                                {msg.content}
-                                            </p>
-                                        </div>
-                                        <span className="text-gray-400 text-sm whitespace-nowrap ml-2 self-end">
-                                            {new Date(msg.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                                        </span>
-                                    </div>
-                                </div>
-                            ))}
-                        </>
+                            </div>
+                        ))
                     ) : (
                         <p className="text-gray-500">No messages to display</p>
                     )}
@@ -202,8 +174,8 @@ export default function Chat() {
                         className="w-full h-full bg-transparent text-left text-black outline-none px-2" 
                         placeholder="Type a message..." 
                         value={newMessage} 
-                        onChange={(e) => setNewMessage(e.target.value)}  
-                        onKeyPress={handleKeyPress}  
+                        onChange={(e) => setNewMessage(e.target.value)}  // Update newMessage on change
+                        onKeyPress={handleKeyPress}  // Handle Enter key press to send the message
                     />
                 </div>
             </div>
