@@ -176,16 +176,32 @@ class AuthController extends Controller
         ]);
     }
     //funckija prieks leadboard dabun visus lietotajus ja daudz lietotaji bus varbut kkadu limitu uzlikt ka like 50 panem or smtn
-    public function countsUsers(Request $request){
-        $users = User::select('users.id','about_users.points', 'users.name')
-            ->join('about_users', 'users.id', '=', 'about_users.user_id') // Join with the AboutUser table
-            ->orderBy('about_users.points', 'desc')
-            ->get();
+    public function countsUsers(Request $request)
+{
+    $users = User::select('users.id', 'about_users.points', 'users.name')
+        ->join('about_users', 'users.id', '=', 'about_users.user_id') // Join with the AboutUser table
+        ->orderBy('about_users.points', 'desc')
+        ->get();
 
-        return response()->json([
-            "data" => $users->toArray(),
-        ]);
-    }
+    // Iterate over users and check for relationships before accessing properties
+    $users->map(function ($user) {
+        // Check if 'aboutUser' exists and has 'subjects'
+        if ($user->aboutUser && $user->aboutUser->subjects->isNotEmpty()) {
+            // If subjects exist, retrieve the favorite subject by points
+            $user->favorite_subject = $user->aboutUser->subjects->sortByDesc('points')->first()->name;
+        } else {
+            // Set favorite subject to null or a default value if no subjects
+            $user->favorite_subject = null;
+        }
+        return $user;
+    });
+
+    return response()->json([
+        "data" => $users->toArray(),
+    ]);
+}
+
+    
 
     public function index()
     {
