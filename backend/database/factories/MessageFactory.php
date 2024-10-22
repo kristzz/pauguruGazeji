@@ -17,8 +17,9 @@ class MessageFactory extends Factory
     public function definition(): array
     {
         return [
-            'user_id' => \App\Models\User::factory(),
-            'content' => $this->faker->sentence(),
+            'user_id' => \App\Models\User::factory(), 
+            'content' => $this->faker->sentence(),     
+            'subject' => $this->faker->sentence(),    
         ];
     }
 }

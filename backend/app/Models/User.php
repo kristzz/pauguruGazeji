@@ -44,9 +44,10 @@ class User extends Authenticatable implements CanResetPassword, MustVerifyEmail
 
     // One-to-Many relationship with Messages
     public function messages()
-    {
+    {   
         return $this->hasMany(Message::class);
     }
+
 
     public function certificate()
     {
