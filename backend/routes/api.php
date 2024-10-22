@@ -28,7 +28,7 @@ Route::post("/countsUsers" ,[AuthController::class, "countsUsers"]);
 
 Route::post('/createSubject', [SubjectController::class, 'createSubject']);
 
-
+Route::post('/forgot-password', [ForgotPasswordController::class, 'sendResetLinkEmail']);
 Route::group([
     "middleware" => "auth:api"
 ], function (){
