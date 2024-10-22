@@ -11,7 +11,7 @@ export default function Home() {
   });
   const [userId, setUserId] = useState(null);
   const [error, setError] = useState("");
-  const [profile, setProfile] = useState("");
+  const [profile, setProfile] = useState({user: { id: 0}});
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -46,7 +46,12 @@ export default function Home() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!profile.id) {
+
+    if (!formData.education) {
+      setError("Please select your education level.");
+      return;
+  }
+    if (!profile.user.id) {
         setError("User ID not found.");
         return;
     }
@@ -54,7 +59,7 @@ export default function Home() {
     try {
         const token = localStorage.getItem("userToken");
         const response = await axios.post("http://127.0.0.1:8000/api/about-you/education", {
-          user_id: profile.id, // Change id to user_id
+          user_id: profile.user.id, // Change id to user_id
           level_of_education: formData.education,
         }, {
             headers: {
@@ -111,9 +116,18 @@ export default function Home() {
           <option value='highschool'>Highschool</option>
           <option value='College'>College</option>
         </select>
-        <button type="submit" className="bg-main-red text-main-white w-40 h-12 rounded-lg mt-16 text-lg">
+        <div className="flex flex-col items-center">
+        
+        <button
+          id="cycleButton"
+          onClick={handleSubmit}
+          className="bg-main-red text-main-white w-40 h-12 rounded-lg mt-14 text-lg">
           Next
         </button>
+        {/* Display error or success messages */}
+        {error && <p className="text-red-500 mt-4">{error}</p>}
+      </div>
+        
       </form>
     </div>
   </div>

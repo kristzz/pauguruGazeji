@@ -37,4 +37,8 @@ class Subject extends Model
     {
         return $this->hasMany(Tasks::class);
     }
+    public function certificate()
+    {
+        return $this->belongsToMany(Certificate::class);
+    }
 }

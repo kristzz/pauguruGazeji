@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\AboutUser;
+use Illuminate\Support\Facades\Auth;
 use App\Models\Subject;
 use Illuminate\Validation\ValidationException;
 
@@ -73,18 +74,39 @@ class AboutYouController extends Controller
             'user_id' => 'required|integer|exists:users,id',
             'level_of_education' => 'required|string|max:255'
         ]);
-    
+
         // Find the AboutUser model based on the user_id
 
             $aboutUser = AboutUser::create([
                 'user_id' => $validated['user_id'],
                 'level_of_education' => $validated['level_of_education']
             ]);
-    
+
             return response()->json(['message' => 'education updated successfully']);
+    }
 
-    
-}
+    public function updateVisibility(Request $request){
+        $validated = $request->validate([
+            'is_visible' => 'required|boolean'
+        ]);
 
+        $user = Auth::user();
 
+        $aboutUser = AboutUser::where('user_id', $user->id)->first();
+
+        if (!$aboutUser) {
+            return response()->json(['message' => 'AboutUser not found'], 404);
+        }
+        $aboutUser->is_visible = $validated['is_visible'];
+        $aboutUser->save();
+
+        return response()->json(['message' => 'Profile visibility updated successfully.']);
+    }
+
+    public function getSubjects(Request $request)
+    {
+        return response()->json([
+            'subjects' => Subject::all()
+        ]);
+    }
 }

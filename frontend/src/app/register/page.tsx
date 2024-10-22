@@ -1,6 +1,4 @@
-// app/register/page.tsx
-
-'use client'; // Enable client-side functionality
+'use client'; //kautkas
 
 import React, { useState } from 'react';
 import api from '../axios'; // Import your Axios instance
@@ -12,11 +10,30 @@ export default function Register() {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
+  
+  const validateEmail = (email: string) => {
+    // Simple regex for email validation
+    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return re.test(String(email).toLowerCase());
+  };
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError(''); // Reset error state
 
-    // Simple password match check
+    // Email validation
+    if (!validateEmail(email)) {
+      setError('Invalid email address.');
+      return;
+    }
+
+    // Password length check
+    if (password.length < 8) {
+      setError('Password must be at least 8 characters long.');
+      return;
+    }
+
+    // Password match check
     if (password !== confirmPassword) {
       setError('Passwords do not match!');
       return;
@@ -28,14 +45,27 @@ export default function Register() {
         password,
         password_confirmation: confirmPassword,
       });
+
       console.log('Registration successful:', response.data);
       localStorage.setItem('userToken', response.data.token);
-      // Optionally reset form or show success message
+      
+      // Redirect to 'About You' page
       router.push('/about-you');
+
     } catch (error) {
       console.error('Registration failed:', error);
-      setError('Registration failed, please try again.');
+
+      // Display a more detailed error if provided
+      if (error.response && error.response.data && error.response.data.message) {
+        setError(error.response.data.message);
+      } else {
+        setError('Registration failed, please try again.');
+      }
     }
+  };
+
+  const handleLoginRedirect = () => {
+    router.push('/login');
   };
 
   return (
@@ -83,12 +113,21 @@ export default function Register() {
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
             />
-            {error && <p className="text-red-500">{error}</p>}
+
+            {error && <p className="text-main-white">{error}</p>} {/* Display error message */}
+
             <div className="flex items-center mt-8">
               <button className="bg-main-red text-main-white text-lg rounded-lg h-12 w-64">
                 Register
               </button>
             </div>
+
+            <div className="flex items-center mt-8">
+              <button  type="button" onClick={handleLoginRedirect} className="bg-main-red text-main-white text-lg rounded-lg h-12 w-64">
+                Log in
+              </button> 
+            </div>
+
           </form>
         </div>
       </div>

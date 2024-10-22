@@ -8,6 +8,8 @@ use App\Models\AboutUser;
 use App\Models\Subject;
 use App\Models\SubjectMatter;
 use App\Models\Message;
+use App\Models\Certificate;
+use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
 {
@@ -36,6 +38,27 @@ class DatabaseSeeder extends Seeder
                 ]);
             }
         }
+        $defaultUser = User::factory()->create([
+            'name' => 'test',
+            'surname' => 'test',
+            'age' => 25,
+            'email' => 'test@test.com', // Specific email
+            'password' => Hash::make('testtest'),
+        ]);
+    
+        // Create AboutUser for the default user
+        AboutUser::factory()->create([
+            'user_id' => $defaultUser->id,
+        ]);
+
+        Certificate::create([
+            'user_id' => 1,
+            'subject_id' => 2,
+        ]);
+        Certificate::create([
+            'user_id' => 1,
+            'subject_id' => 1,
+        ]);
 
         // Create 10 Users, AboutUser records, Messages and Assign random subjects to AboutUsers
         User::factory()->count(10)->create()->each(function ($user) {
