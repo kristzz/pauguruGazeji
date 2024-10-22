@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation"; 
 import api from '../axios'; 
+import Link from 'next/link';
 
 interface SubjectWithMessage {
     subject: string;
@@ -73,6 +74,11 @@ export default function Messages() {
     return (
         <main className="bg-white h-screen w-screen flex flex-col items-center">
             <div className="bg-white text-white h-[10%] w-full flex border-b-[5px] border-black items-center justify-center">
+                <Link href="/tasks" className="fixed my-auto left-1">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="black" className="size-6">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" />
+                    </svg>
+                </Link>
                 <input
                     type="text"
                     placeholder="Search..."
