@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 
 export default function Tasks() {
     const router = useRouter();
-    const [profile, setProfile] = useState({ id: '', name: '', email: '', role: '' }); // Add role to state
+    const [profile, setProfile] = useState({ user: { id: '', name: '', email: '', role: '' } });
     const [tasks, setTasks] = useState([]);
     const [currentIndex, setCurrentIndex] = useState(0);
     const [touchStart, setTouchStart] = useState(null);
@@ -22,7 +22,8 @@ export default function Tasks() {
                         Authorization: `Bearer ${token}` // Include the token in the request
                     }
                 });
-                setProfile(response.data.data); // Update profile with user data (including role)
+                setProfile(response.data.data);
+                console.log(response.data.data) // Update profile with user data (including role)
             } catch (error) {
                 console.error('Error fetching profile:', error);
             }
@@ -113,7 +114,7 @@ export default function Tasks() {
         <main className='bg-main-blue overflow-hidden h-screen w-screen absolute'>
             <div className="bg-main-red h-screen w-screen flex flex-col items-center absolute overflow-hidden">
                 <div className='flex flex-row '>
-                    {profile.role === 'admin' && ( 
+                    {profile.user.role === 'admin' && ( 
                         
                         <button 
                             className="bg-main-blue text-white px-4 py-2 rounded-lg top-10 m-1 relative"
@@ -122,7 +123,7 @@ export default function Tasks() {
                             New Task
                         </button>
                     )}
-                    {profile.role === 'admin' && ( 
+                    {profile.user.role === 'admin' && ( 
                         
                         <button 
                             className="bg-main-blue text-white px-4 py-2 rounded-lg m-1 top-10 relative"
@@ -131,7 +132,7 @@ export default function Tasks() {
                             New Subject
                         </button>
                     )}
-                    {profile.role === 'admin' && ( 
+                    {profile.user.role === 'admin' && ( 
                         
                         <button 
                             className="bg-main-blue text-white px-4 py-2 rounded-lg top-10 m-1 relative"
