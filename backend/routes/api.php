@@ -55,9 +55,10 @@ Route::post('/markMessageAsSolved', [MessageController::class, 'markMessageAsSol
 
 
 
-
+Route::get('/getUserMessages', [MessageController::class, 'getUserMessages']);
 Route::get('/getUserTasks', [AuthController::class, 'getUserTasks']);
 });
+
 
 Route::post('/awardPoints', [MessageController::class, 'awardPoints'])->middleware('auth:api');
 

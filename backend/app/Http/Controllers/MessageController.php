@@ -6,7 +6,7 @@
     use App\Models\AboutUser; 
     use Illuminate\Support\Facades\Auth;
     use Illuminate\Http\JsonResponse; // Ensure this is included
-
+    use Illuminate\Support\Facades\DB;
     class MessageController extends Controller
     {
         public function awardPoints()
@@ -71,7 +71,8 @@
                 "user_id" => Auth::id(),
                 "content" => $request->content,
                 "subject" => $request->subject,
-                "sender" => $request->sender
+                "sender" => $request->sender,
+                
             ]);
         
             return response()->json([
@@ -217,5 +218,15 @@ public function getMessageFrom(Request $request)
                 'message' => 'Last task retrieved successfully.',
             ]);
         }
+        public function getUserMessages()
+    {
+        // Get the authenticated user's ID
+        $userId = Auth::id(); // Get the authenticated user's ID
+        $messages = Message::where('user_id',$userId)->get();
+
+    
+        return response()->json($messages);
+    }
+
         
 }

@@ -164,7 +164,8 @@ public function convertTaskToMessage(Request $request)
         'user_id' => Auth::id(),
         'content' => $task->task_description,
         'subject' => $subject->name,         
-        'task_answer' => $task->correct_answer
+        'task_answer' => $task->correct_answer,
+        'task_id'=>$request->task_id
     ]);
 
     return response()->json([

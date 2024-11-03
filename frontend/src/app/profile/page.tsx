@@ -12,6 +12,7 @@ export default function Profile() {
         const fetchProfile = async () => {
             try {
                 const token = localStorage.getItem('userToken');
+                console.log(token);
                 if (token) {
                     const response = await axios.get('http://localhost:8000/api/profile', {
                         headers: {
@@ -19,6 +20,7 @@ export default function Profile() {
                         },
                     });
                     setProfile(response.data.data);
+
                 } else {
                     setError("User is not authenticated.");
                 }
