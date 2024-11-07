@@ -39,6 +39,9 @@ Route::post('/about-you/education', [AboutYouController::class, 'aboutYouEducati
 Route::get('/getMessageFrom', [MessageController::class, 'getMessageFrom']);
 Route::post('/postMessage', [MessageController::class, 'postMessage']);
 
+Route::get('/getMessagesByTaskId', [MessageController::class, 'getMessagesByTaskId']);
+
+
 Route::get('/getSubjectsWithLastMessages', [MessageController::class, 'getSubjectsWithLastMessages']);
 
 Route::get('/getLastMessageFromSubject', [MessageController::class, 'getLastMessageFromSubject']);

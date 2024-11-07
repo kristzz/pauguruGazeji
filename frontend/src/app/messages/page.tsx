@@ -10,6 +10,7 @@ interface Message {
     subject: string;
     task_answer: string;
     sender: string;
+    task_id: string;
 }
 
 const VALID_SUBJECTS = [
@@ -41,7 +42,6 @@ export default function Messages() {
             });
             console.log(response.data);
             if (response.status) {
-               
                 console.log('Got the messages');
                 setMessages(response.data);
             } else {
@@ -60,8 +60,9 @@ export default function Messages() {
         fetchMessages();
     }, []);
 
-    const handleSubjectClick = (subject: string) => {
-        router.push(`/chat?subject=${encodeURIComponent(subject)}`);
+    const handleTaskClick = (taskId: string) => {
+        // Redirecting to chat with the specific taskId
+        router.push(`/chat?task_id=${encodeURIComponent(taskId)}`);
     };
 
     const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -102,15 +103,16 @@ export default function Messages() {
                         {Object.keys(groupedMessages).length > 0 ? (
                             Object.keys(groupedMessages).map(subject => (
                                 <div key={subject} className="p-4 border-b">
-                                    <h3
-                                        className="font-semibold text-lg cursor-pointer hover:underline"
-                                        onClick={() => handleSubjectClick(subject)}
-                                    >
+                                    <h3 className="font-semibold text-lg">
                                         {subject}
                                     </h3>
                                     <ul className="mt-2 space-y-2">
                                         {groupedMessages[subject].map((message) => (
-                                            <li key={message.id} className="flex items-start p-2 border rounded cursor-pointer hover:bg-gray-100">
+                                            <li 
+                                                key={message.id} 
+                                                className="flex items-start p-2 border rounded cursor-pointer hover:bg-gray-100"
+                                                onClick={() => handleTaskClick(message.task_id)} // Updated to call handleTaskClick
+                                            >
                                                 <img
                                                     src={`https://via.placeholder.com/50?text=${subject.charAt(0)}`}
                                                     alt={subject}

@@ -190,7 +190,38 @@ public function getMessageFrom(Request $request)
                 'data' => $response
             ]);
         }        
-
+        
+        public function getMessagesByTaskId(Request $request)
+        {
+            $request->validate([
+                'task_id' => 'required|integer|exists:tasks,id',
+            ]);
+        
+            $taskId = $request->input('task_id');
+            $userId = Auth::id();
+        
+            \Log::info("Getting messages for Task ID: {$taskId}, User ID: {$userId}");
+        
+            $messages = Message::where('task_id', $taskId)
+                                ->where('user_id', $userId)
+                                ->get(['id', 'content', 'created_at', 'task_answer']);
+        
+            \Log::info("Messages retrieved: ", $messages->toArray());
+        
+            if ($messages->isEmpty()) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'No messages found for this task.',
+                ], 404);
+            }
+        
+            return response()->json([
+                'status' => true,
+                'messages' => $messages
+            ]);
+        }
+        
+        
         public function getLastTask(Request $request): JsonResponse
         {
             $request->validate([
