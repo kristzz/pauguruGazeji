@@ -38,6 +38,31 @@ export default function Home() {
                                                   sm:w-60 sm:h-16 sm:text-xl">Register</button></Link>
         <Link href="/login"><button className="bg-main-red text-main-white text-lg rounded-lg h-12 w-40 my-4
                                                   sm:w-60 sm:h-16 sm:text-xl">Sign In</button></Link>
+        <h1 className="text-main-blue text-xl text-center w-[50%] mt-12 mb-36 z-1
+              sm:mt-56 sm:text-4xl
+              xl:mt-36" >For new users: </h1>
+
+          <div className="h-56 grid grid-cols-4 gap-4 content-center">
+            <div className=" relative grid grid-row-2 gap-4 content-center ">
+              <div className="relative w-[320px] h-[180px] bg-main-red rounded-xl"></div>
+              <div className="relative w-10 h-10 bg-main-red"></div>
+            </div>
+            <div className="relative  grid grid-row-2 gap-4 content-center">
+              <div className="relative w-[320px] h-[180px] bg-main-red rounded-xl"></div>
+              <div className="relative w-10 h-10 bg-main-red"></div>
+            </div>
+            <div className=" relative grid grid-row-2 gap-4 content-center">
+              <div className="relative w-[320px] h-[180px] bg-main-red rounded-xl"></div>
+              <div className="relative w-10 h-10 bg-main-red"></div>
+            </div>
+            <div className="relative grid grid-row-2 gap-4 content-center">
+              <div className="relative w-[320px] h-[180px] bg-main-red rounded-xl"></div>
+              <div className="relative w-10 h-10 bg-main-red"></div>
+              
+            </div>
+          </div>
+
+
       </div>
     </main>
   );
