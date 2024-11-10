@@ -43,21 +43,21 @@ export default function Home() {
               xl:mt-36" >For new users: </h1>
 
           <div className="h-56 grid grid-cols-4 gap-4 content-center">
-            <div className=" relative grid grid-row-2 gap-4 content-center ">
+            <div className=" relative grid grid-row-2 gap-4 content-center w-[320px] h-[400px] ">
               <div className="relative w-[320px] h-[180px] bg-main-red rounded-xl"></div>
-              <div className="relative w-10 h-10 bg-main-red"></div>
+              <div className="relative text-center text-xl">On the task page swipe right to select a task or left to see a new one</div>
             </div>
-            <div className="relative  grid grid-row-2 gap-4 content-center">
+            <div className="relative  grid grid-row-2 gap-4 content-center w-[320px] h-[400px]">
               <div className="relative w-[320px] h-[180px] bg-main-red rounded-xl"></div>
-              <div className="relative w-10 h-10 bg-main-red"></div>
+              <div className="relative text-center text-xl">After swiping right on a task you will be redirected to the message page</div>
             </div>
-            <div className=" relative grid grid-row-2 gap-4 content-center">
+            <div className=" relative grid grid-row-2 gap-4 content-center w-[320px] h-[400px]">
               <div className="relative w-[320px] h-[180px] bg-main-red rounded-xl"></div>
-              <div className="relative w-10 h-10 bg-main-red"></div>
+              <div className="relative text-center text-xl">By clicking on a message you can open up the tasks chat where you can answer the task</div>
             </div>
-            <div className="relative grid grid-row-2 gap-4 content-center">
+            <div className="relative grid grid-row-2 gap-4 content-center w-[320px] h-[400px]">
               <div className="relative w-[320px] h-[180px] bg-main-red rounded-xl"></div>
-              <div className="relative w-10 h-10 bg-main-red"></div>
+              <div className="relative text-center text-xl">Type your answer in the chat and keep working until youve gotten the correct asnwer</div>
               
             </div>
           </div>
