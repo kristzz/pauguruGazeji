@@ -17,14 +17,14 @@ export default function Tasks() {
     useEffect(() => {
         const fetchUserProfile = async () => {
             try {
-                const token = localStorage.getItem('userToken'); // Get the token from local storage
+                const token = localStorage.getItem('userToken');
                 const response = await axios.get('http://127.0.0.1:8000/api/profile', {
                     headers: {
-                        Authorization: `Bearer ${token}` // Include the token in the request
+                        Authorization: `Bearer ${token}`
                     }
                 });
                 setProfile(response.data.data);
-                console.log(response.data.data) // Update profile with user data (including role)
+                console.log(response.data.data);
             } catch (error) {
                 console.error('Error fetching profile:', error);
             }
@@ -32,10 +32,10 @@ export default function Tasks() {
 
         const fetchTasks = async () => {
             try {
-                const token = localStorage.getItem('userToken'); // Get the token from local storage
+                const token = localStorage.getItem('userToken');
                 const response = await axios.get('http://127.0.0.1:8000/api/getUserTasks', {
                     headers: {
-                        Authorization: `Bearer ${token}` // Include the token in the request
+                        Authorization: `Bearer ${token}`
                     }
                 });
                 setTasks(response.data);
@@ -50,14 +50,14 @@ export default function Tasks() {
     }, []);
 
     const handleTouchStart = (e) => {
-        setTouchStart(e.targetTouches[0].clientX);
+        setTouchStart(e.touches ? e.touches[0].clientX : e.clientX); // Use `e.clientX` for mouse events
     };
 
     const handleTouchMove = (e) => {
-        setTouchEnd(e.targetTouches[0].clientX);
+        setTouchEnd(e.touches ? e.touches[0].clientX : e.clientX); // Use `e.clientX` for mouse events
         if (touchStart !== null) {
-            const distance = e.targetTouches[0].clientX - touchStart;
-            setBoxPosition(distance); // Move box based on touch movement
+            const distance = (e.touches ? e.touches[0].clientX : e.clientX) - touchStart;
+            setBoxPosition(distance);
         }
     };
 
@@ -69,7 +69,6 @@ export default function Tasks() {
                 console.log('swiped right');
                 handleSwipeRight();
                 setCurrentIndex((prevIndex) => (prevIndex < tasks.length - 1 ? prevIndex + 1 : prevIndex));
-               
             } else if (distance < -150) {
                 console.log('swiped left');
                 setCurrentIndex((prevIndex) => (prevIndex < tasks.length - 1 ? prevIndex + 1 : prevIndex));
@@ -77,38 +76,36 @@ export default function Tasks() {
         }
         setTouchStart(null);
         setTouchEnd(null);
-        setBoxPosition(0); // Reset box position after swiping
+        setBoxPosition(0);
     };
 
-    const currentTask = tasks.length > 0 ? tasks[currentIndex] : null; // Get the current task based on index
+    const currentTask = tasks.length > 0 ? tasks[currentIndex] : null;
 
     const handleSwipeRight = async () => {
         try {
-            const token = localStorage.getItem('userToken'); // Get the token from local storage
+            const token = localStorage.getItem('userToken');
             const response = await axios.post('http://127.0.0.1:8000/api/convertTaskToMessage', {
                 task_id: currentTask.task_id, 
                 sender: 'app'
-            },
-            {
+            }, {
                 headers: {
-                    Authorization: `Bearer ${token}`  
+                    Authorization: `Bearer ${token}`
                 }
-            }
-            );
+            });
             router.push('messages');
         } catch (error) {
-            console.error('Error fetching profile:', error);
+            console.error('Error converting task:', error);
         }
     };
 
     const handleCreateTask = () => {
-        router.push('/data-entry/create-task') 
+        router.push('/data-entry/create-task');
     };
     const handleCreateSubject = () => {
-        router.push('/data-entry/create-subject') 
+        router.push('/data-entry/create-subject');
     };
     const handleCreateSubjectMatter = () => {
-        router.push('/data-entry/create-subject-matter') 
+        router.push('/data-entry/create-subject-matter');
     };
 
     return (
@@ -125,40 +122,27 @@ export default function Tasks() {
                 </svg>
             </Link>
                 <div className='flex flex-row '>
-                    {profile.user.role === 'admin' && ( 
-                        
-                        <button 
-                            className="bg-main-blue text-white px-4 py-2 rounded-lg top-10 m-1 relative"
-                            onClick={handleCreateTask}
-                        >
-                            New Task
-                        </button>
+                    {profile.user.role === 'admin' && (
+                        <button className="bg-main-blue text-white px-4 py-2 rounded-lg top-10 m-1 relative"
+                            onClick={handleCreateTask}>New Task</button>
                     )}
-                    {profile.user.role === 'admin' && ( 
-                        
-                        <button 
-                            className="bg-main-blue text-white px-4 py-2 rounded-lg m-1 top-10 relative"
-                            onClick={handleCreateSubject}
-                        >
-                            New Subject
-                        </button>
+                    {profile.user.role === 'admin' && (
+                        <button className="bg-main-blue text-white px-4 py-2 rounded-lg m-1 top-10 relative"
+                            onClick={handleCreateSubject}>New Subject</button>
                     )}
-                    {profile.user.role === 'admin' && ( 
-                        
-                        <button 
-                            className="bg-main-blue text-white px-4 py-2 rounded-lg top-10 m-1 relative"
-                            onClick={handleCreateSubjectMatter}
-                        >
-                            New Matter
-                        </button>
+                    {profile.user.role === 'admin' && (
+                        <button className="bg-main-blue text-white px-4 py-2 rounded-lg top-10 m-1 relative"
+                            onClick={handleCreateSubjectMatter}>New Matter</button>
                     )}
-
                 </div>
                 <div
                     className="bg-main-white w-[65%] h-[50%] shadow-2xl absolute top-[20%] rounded-lg align-center border-2"
                     onTouchStart={handleTouchStart}
                     onTouchMove={handleTouchMove}
                     onTouchEnd={handleTouchEnd}
+                    onMouseDown={handleTouchStart} // Handle mouse down event for PC
+                    onMouseMove={touchStart !== null ? handleTouchMove : null} // Handle mouse move event for PC if dragging
+                    onMouseUp={handleTouchEnd} // Handle mouse up event for PC
                     style={{ transform: `translateX(${boxPosition}px)`, transition: 'none' }}
                 >
                     {currentTask ? (
