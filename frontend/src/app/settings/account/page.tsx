@@ -2,8 +2,10 @@
 import React from 'react';
 import axios from 'axios';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 export default function Settings() {
+  const router = useRouter()
   const handleLogout = async () => {
     try {
       const response = await axios.post('http://localhost:8000/api/logout', {}, {
@@ -13,6 +15,7 @@ export default function Settings() {
       });
 
       alert(response.data.message);
+      router.push("/login");
     } catch (error) {
       console.error('Error during logout:', error);
     }
@@ -28,6 +31,7 @@ export default function Settings() {
         });
 
         alert(response.data.message);
+        router.push("/login");
       } catch (error) {
         console.error('Error during account deletion:', error);
       }

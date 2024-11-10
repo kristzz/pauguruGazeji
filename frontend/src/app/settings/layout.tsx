@@ -17,7 +17,7 @@ export default function SettingsLayout({ children }: { children: ReactNode }) {
   return (
     <div className="flex w-screen h-screen bg-main-white">
       {/* Toggle button for mobile on the right */}
-      <Link href="/profile" className="block md:hidden p-2 fixed top-4 left-4 z-10">
+      <Link href="/profile" className="block p-2 fixed top-4 left-4 z-10">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="size-6">
           <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" />
         </svg>

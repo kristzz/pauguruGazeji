@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Space_Grotesk } from "next/font/google"; // Import Space Grotesk
 import "./globals.css";
+import ProtectedRoute from "./protectedRoute"; // Import your client-side protection logic
 
 const spaceGrotesk = Space_Grotesk({
   subsets: ["latin"],
@@ -20,7 +21,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={spaceGrotesk.className}>{children}</body>
+      <body className={spaceGrotesk.className}>
+        {/* Wrap content with ProtectedRoute for client-side authentication */}
+        <ProtectedRoute>
+          {children}
+        </ProtectedRoute>
+      </body>
     </html>
   );
 }
