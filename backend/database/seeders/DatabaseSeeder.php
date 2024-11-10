@@ -72,10 +72,7 @@ class DatabaseSeeder extends Seeder
             $subjects = Subject::inRandomOrder()->take(2)->pluck('id'); // Get 2 random subjects
             $aboutUser->subjects()->attach($subjects);
 
-            // Create messages for each user
-            Message::factory()->count(3)->create([
-                'user_id' => $user->id,
-            ]);
+
         });
     }
 }

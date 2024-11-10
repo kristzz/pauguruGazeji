@@ -26,5 +26,8 @@ class Tasks extends Model // Change from Tasks to Task
     {
         return $this->belongsTo(SubjectMatter::class);
     }
-    
+    public function messages()
+    {   
+        return $this->hasMany(Message::class);
+    }
 }

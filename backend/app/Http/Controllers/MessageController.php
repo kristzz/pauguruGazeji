@@ -6,7 +6,7 @@
     use App\Models\AboutUser; 
     use Illuminate\Support\Facades\Auth;
     use Illuminate\Http\JsonResponse; // Ensure this is included
-
+    use Illuminate\Support\Facades\DB;
     class MessageController extends Controller
     {
         public function awardPoints()
@@ -71,7 +71,8 @@
                 "user_id" => Auth::id(),
                 "content" => $request->content,
                 "subject" => $request->subject,
-                "sender" => $request->sender
+                "sender" => $request->sender,
+                
             ]);
         
             return response()->json([
@@ -189,7 +190,38 @@ public function getMessageFrom(Request $request)
                 'data' => $response
             ]);
         }        
-
+        
+        public function getMessagesByTaskId(Request $request)
+        {
+            $request->validate([
+                'task_id' => 'required|integer|exists:tasks,id',
+            ]);
+        
+            $taskId = $request->input('task_id');
+            $userId = Auth::id();
+        
+            \Log::info("Getting messages for Task ID: {$taskId}, User ID: {$userId}");
+        
+            $messages = Message::where('task_id', $taskId)
+                                ->where('user_id', $userId)
+                                ->get(['id', 'content', 'created_at', 'task_answer']);
+        
+            \Log::info("Messages retrieved: ", $messages->toArray());
+        
+            if ($messages->isEmpty()) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'No messages found for this task.',
+                ], 404);
+            }
+        
+            return response()->json([
+                'status' => true,
+                'messages' => $messages
+            ]);
+        }
+        
+        
         public function getLastTask(Request $request): JsonResponse
         {
             $request->validate([
@@ -217,5 +249,15 @@ public function getMessageFrom(Request $request)
                 'message' => 'Last task retrieved successfully.',
             ]);
         }
+        public function getUserMessages()
+    {
+        // Get the authenticated user's ID
+        $userId = Auth::id(); // Get the authenticated user's ID
+        $messages = Message::where('user_id',$userId)->get();
+
+    
+        return response()->json($messages);
+    }
+
         
 }
