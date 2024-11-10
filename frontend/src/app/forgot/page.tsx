@@ -43,29 +43,26 @@ export default function ForgotPassword() {
   };
 
   return (
-    <main>
-      <div className="bg-main-red h-screen w-screen">
-        <div>
-          <form className="flex flex-col items-center" onSubmit={handleSubmit}>
-            <input
-              className={`h-12 w-64 mt-24 mb-4 rounded-lg p-4 ${error ? 'border-red-500' : ''}`}
-              type="email"
-              id="email"
-              name="email"
-              placeholder="Enter your email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
-            <div className="flex items-center mt-8">
-              <button className="bg-main-blue text-main-white text-lg rounded-lg h-12 w-64">
-                Reset Password
-              </button>
-            </div>
-            {message && <p className="text-green-500 mt-4">{message}</p>}
-            {error && <p className="text-main-white mt-4">{error}</p>}
-          </form>
-        </div>
+    <div className="flex justify-center h-screen w-screen">
+      <div id="passwordResetSection" className="flex flex-col items-center">
+        <p className="text-main-blue text-2xl text-center mt-16">Reset Password</p>
+        {error && <p className="text-red-500 mt-4">{error}</p>}
+        {message && <p className="text-green-500 mt-4">{message}</p>}
+        <form onSubmit={handleSubmit} className="flex flex-col items-center">
+          <input
+            type="email"
+            name="email"
+            placeholder="Enter your email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className="h-12 w-64 mt-8 rounded-lg p-4 border-2 border-main-blue"
+            required
+          />
+          <button type="submit" className="bg-main-red text-main-white text-lg rounded-lg h-12 w-52 mt-24">
+            Reset Password
+          </button>
+        </form>
       </div>
-    </main>
+    </div>
   );
 }
