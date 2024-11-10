@@ -33,10 +33,9 @@ export default function Signin() {
 
             // Optionally redirect the user after login
             setTimeout(() => {
-                router.push('/profile'); // Redirect to dashboard after success
-            }, 500); // Redirect after 1.5 seconds for a smoother user experience
+                router.push('/tasks');
+            }, 1500);
         } else {
-            // Handle failed login attempt by displaying the error message
             setError(response.data.message || 'Invalid login details.');
         }
 

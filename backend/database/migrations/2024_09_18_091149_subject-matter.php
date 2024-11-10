@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('subject_matters', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('subject_id')->constrained('subjects')->onDelete('cascade'); // Link to subjects
             $table->string('name');
             $table->timestamps();
         });

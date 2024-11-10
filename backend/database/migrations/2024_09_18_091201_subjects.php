@@ -13,7 +13,6 @@ return new class extends Migration
     {
         Schema::create('subjects', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('subject_matter_id')->constrained('subject_matters')->onDelete('cascade'); // Foreign key to subject_matters table
             $table->string('name');
             $table->timestamps();
         });

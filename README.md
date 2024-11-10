@@ -4,7 +4,8 @@
 
 - Next.js
 - Laravel
-- mySQL
+- SQLite
+- SVGs from [heroicons](https://heroicons.com/)               
 Color s:
 wait #f7fcf7
 blu #0e416b
