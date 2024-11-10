@@ -116,7 +116,7 @@ export default function Home() {
                 type="number"
                 name="age"
                 placeholder="Age"
-                min="0"
+                min="6"
                 max="116"
                 value={formData.age}
                 onChange={handleChange}

@@ -19,7 +19,7 @@ class AboutYouController extends Controller
             'id' => 'required|integer|exists:users,id', // Check if the user ID exists
             'name' => 'required|string|max:255',
             'surname' => 'required|string|max:255',
-            'age' => 'required|integer|min:0|max:116',
+            'age' => 'required|integer|min:6|max:116',
             'gender' => 'required|string',
         ]);
 
