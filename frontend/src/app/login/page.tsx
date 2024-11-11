@@ -58,71 +58,58 @@ export default function Signin() {
   };
 
   return (
-    <main>
-      <div className="bg-main-red h-screen w-screen">
-        <div className="">
-          <form className="flex flex-col items-center" onSubmit={handleLogin} method="post">
-            <div className="flex flex-row">
-              <div className="bg-main-blue w-60 h-16 rounded-b-xl z-0 hidden sm:w-72 sm:h-24 sm:block xl:w-[600px]"></div>
-              <div className="absolute bg-main-white w-8 h-60 rounded-s-xl right-0 top-64 hidden sm:w-24 sm:h-72 sm:block"></div>
-              <div className="absolute bg-main-white w-12 h-32 rounded-e-xl left-0 top-52 hidden sm:w-20 sm:h-64 sm:block xl:top-40"></div>
-              <div className="absolute bg-main-blue w-8 h-32 rounded-e-xl left-0 bottom-36 hidden sm:w-16 sm:h-40 sm:bottom-44 sm:block xl:bottom-32"></div>
-              <div className="absolute bg-main-white w-40 h-16 rounded-tr-xl bottom-0 left-0 hidden sm:w-48 sm:h-20 sm:block"></div>
-              <div className="absolute bg-main-blue w-28 h-24 rounded-tl-xl bottom-0 right-0 hidden sm:w-40 sm:h-32 sm:block"></div>
-            </div>
+    <div className="flex justify-center h-screen w-screen">
+      <div id="signinSection" className="flex flex-col items-center">
+        <p className="text-main-blue text-2xl text-center mt-16">Log In</p>
+        
+        {error && <p className="text-red-500 mt-4">{error}</p>} {/* Display error message */}
+        
+        <form onSubmit={handleLogin} className="flex flex-col items-center">
+          <input
+            type="email"
+            name="email"
+            placeholder="Enter your email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className="h-12 w-64 mt-8 mb-4 rounded-lg p-4 border-2 border-main-blue"
+            disabled={loading}  // Disable input during loading
+            required
+          />
+          <input
+            type="password"
+            name="password"
+            placeholder="Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            className="h-12 w-64 my-4 rounded-lg p-4 border-2 border-main-blue"
+            disabled={loading}  // Disable input during loading
+            required
+          />
 
-            <input
-              className="h-12 w-64 mt-24 mb-4 rounded-lg p-4"
-              type="email"
-              id="email"
-              name="email"
-              placeholder="Enter your email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              disabled={loading}  // Disable input during loading
-            />
-            <input
-              className="h-12 w-64 my-4 rounded-lg p-4"
-              type="password"
-              id="password"
-              name="password"
-              placeholder="Password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              disabled={loading}  // Disable input during loading
-            />
+          <div className="mb-4">
+            <Link href="/forgot" className="text-main-blue">
+              Forgot Password?
+            </Link>
+          </div>
 
-            <div className="mb-4">
-              <Link href="/forgot" className="text-main-blue">
-                Forgot Password?
-              </Link>
-            </div>
+          <button 
+            type="submit" 
+            className="bg-main-blue text-main-white text-lg rounded-lg h-12 w-64 mt-8"
+            disabled={loading} // Disable button during loading
+          >
+            {loading ? 'Logging in...' : 'Log In'}  {/* Show loading state */}
+          </button>
 
-            {error && <p className="text-main-white">{error}</p>} {/* Display error message */}
-
-            <div className="flex items-center mt-8">
-              <button 
-                className="bg-main-blue text-main-white text-lg rounded-lg h-12 w-64"
-                disabled={loading} // Disable button during loading
-              >
-                {loading ? 'Logging in...' : 'Log In'}  {/* Show loading state */}
-              </button>
-            </div>
-
-            <div className="flex items-center mt-8">
-              <button  
-                type="button" 
-                onClick={handleRegisterRedirect} 
-                className="bg-main-blue text-main-white text-lg rounded-lg h-12 w-64"
-                disabled={loading} // Disable button during loading
-              >
-                Register
-              </button>
-            </div>
-
-          </form>
-        </div>
+          <button 
+            type="button" 
+            onClick={handleRegisterRedirect} 
+            className="bg-main-red text-main-white text-lg rounded-lg h-12 w-64 mt-8"
+            disabled={loading} // Disable button during loading
+          >
+            Register
+          </button>
+        </form>
       </div>
-    </main>
+    </div>
   );
 }

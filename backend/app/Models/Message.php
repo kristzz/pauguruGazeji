@@ -18,7 +18,8 @@ class Message extends Model
         'user_id',
         'content',
         'subject',
-        'task_answer',  // Add task_answer to the fillable array
+        'task_answer',
+        'task_id',  // Add task_answer to the fillable array
         'sender',
     ];
 
@@ -31,5 +32,9 @@ class Message extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+    public function tasks()
+    {
+        return $this->belongsTo(Tasks::class);
     }
 }
