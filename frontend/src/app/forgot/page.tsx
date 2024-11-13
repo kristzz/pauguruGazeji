@@ -12,17 +12,18 @@ export default function ForgotPassword() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const normalizedEmail = email.toLowerCase();
 
     // Simple email format validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
+    if (!emailRegex.test(normalizedEmail)) {
       setError('Invalid email format');
       setTimeout(() => setError(''), 2000); // Error disappears after 2 seconds
       return;
     }
 
     try {
-      const res = await axios.post('http://127.0.0.1:8000/api/forgot-password', { email });
+      const res = await axios.post('http://127.0.0.1:8000/api/forgot-password', {  email: normalizedEmail  });
       setMessage('Password reset link sent to your email');
       alert('Please check your email for the password reset link.');
       

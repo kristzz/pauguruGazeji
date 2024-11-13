@@ -21,8 +21,9 @@ export default function Register() {
     e.preventDefault();
     setError(''); // Reset error state
 
-    // Email validation
-    if (!validateEmail(email)) {
+    const normalizedEmail = email.toLowerCase();
+
+    if (!validateEmail(normalizedEmail)) {
       setError('Invalid email address.');
       return;
     }
@@ -41,7 +42,7 @@ export default function Register() {
 
     try {
       const response = await api.post('http://127.0.0.1:8000/api/register', {
-        email,
+        email: normalizedEmail, // Use normalized email
         password,
         password_confirmation: confirmPassword,
       });

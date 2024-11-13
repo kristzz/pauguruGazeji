@@ -17,9 +17,11 @@ export default function Signin() {
     setError(''); // Clear any previous errors
     setLoading(true); // Start loading
 
+    const normalizedEmail = email.toLowerCase(); // Normalize email
+
     try {
         const response = await api.post('http://127.0.0.1:8000/api/login', {
-            email,
+            email: normalizedEmail,
             password,
         });
         
