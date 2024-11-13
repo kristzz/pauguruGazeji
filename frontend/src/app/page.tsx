@@ -85,7 +85,7 @@ export default function Home() {
           <div className="flex flex-col items-center w-full sm:w-3/4 lg:w-1/2 space-y-4">
             <Link href="/register">
               <button className="bg-main-blue text-white text-lg font-semibold rounded-lg h-12 w-48 shadow-md hover:bg-blue-700 transition duration-300">
-                Register
+                Reģister
               </button>
             </Link>
             <Link href="/login">
