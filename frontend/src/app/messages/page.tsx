@@ -55,10 +55,7 @@ export default function Messages() {
 
     useEffect(() => {
         fetchMessages();
-        const interval = setInterval(() => {
-            fetchMessages();
-        }, 100); 
-        return () => clearInterval(interval);
+
     }, []);
 
     const handleTaskClick = (taskId: string) => {
