@@ -107,6 +107,14 @@ export default function Chat() {
             const correctAnswer = currentMessage?.task_answer?.toLowerCase();
 
             if (correctAnswer && correctAnswer === newMessage.toLowerCase()) {
+                const response = await api.get('http://127.0.0.1:8000/api/addPoint', {
+                    headers: { Authorization: `Bearer ${token}` }
+                });
+                if (response.status) {
+                    console.log('Point added:', response.data);
+                } else {
+                    setError('Failed to add point');
+                }
                 setIsAnswerCorrect(true);
                 setIsChatInputVisible(false);
 
