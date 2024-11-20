@@ -19,33 +19,30 @@ export default function Chat() {
     const [loading, setLoading] = useState<boolean>(true);
     const [currentBlueMessageIndex, setCurrentBlueMessageIndex] = useState<number | null>(null);
     const [solvedMessageIds, setSolvedMessageIds] = useState<Set<number>>(new Set());
-    const [isAnswerCorrect, setIsAnswerCorrect] = useState<boolean>(false); 
-    const [isChatInputVisible, setIsChatInputVisible] = useState<boolean>(true);  // Track if the chat input is visible
+    const [isAnswerCorrect, setIsAnswerCorrect] = useState<boolean>(false);
+    const [isChatInputVisible, setIsChatInputVisible] = useState<boolean>(true);
     const router = useRouter();
     const searchParams = useSearchParams();
     const taskId = searchParams.get('task_id') || '';
 
-    // Fetch messages from localStorage or API
-    const printMessages = async () => {
+    const fetchMessages = async () => {
         const token = localStorage.getItem('userToken');
         if (!token) {
             setError('User is not logged in.');
             setLoading(false);
             return;
         }
-    
+
         const savedMessages = localStorage.getItem(`messages-${taskId}`);
         if (savedMessages) {
             const allMessages = JSON.parse(savedMessages);
             setMessages(allMessages);
-    
-            // Check for any message with "Correct answer!"
+
             const correctAnswerMessage = allMessages.find(msg => msg.content === "Correct answer!");
             if (correctAnswerMessage) {
-                setIsChatInputVisible(false);  // Hide chat input if "Correct answer!" is found
+                setIsChatInputVisible(false);
             }
-    
-            // Find the first unsolved blue message to focus on
+
             const blueMessages = allMessages.filter(msg => msg.task_answer && !solvedMessageIds.has(msg.id));
             if (blueMessages.length > 0) {
                 const firstBlueIndex = allMessages.findIndex(msg => msg.id === blueMessages[0].id);
@@ -63,13 +60,12 @@ export default function Chat() {
                 const allMessages = response.data.messages;
                 setMessages(allMessages);
                 localStorage.setItem(`messages-${taskId}`, JSON.stringify(allMessages));
-    
-                // Check for any message with "Correct answer!"
+
                 const correctAnswerMessage = allMessages.find(msg => msg.content === "Correct answer!");
                 if (correctAnswerMessage) {
-                    setIsChatInputVisible(false);  // Hide chat input if "Correct answer!" is found
+                    setIsChatInputVisible(false);
                 }
-    
+
                 const blueMessages = allMessages.filter(msg => msg.task_answer && !solvedMessageIds.has(msg.id));
                 if (blueMessages.length > 0) {
                     const firstBlueIndex = allMessages.findIndex(msg => msg.id === blueMessages[0].id);
@@ -84,125 +80,113 @@ export default function Chat() {
             }
         }
     };
-    
-const postMessage = async () => {
-    if (newMessage.trim() === '') return;
 
-    const token = localStorage.getItem('userToken');
-    if (!token) {
-        setError('User is not logged in.');
-        return;
-    }
+    const postMessage = async () => {
+        if (newMessage.trim() === '') return;
 
-    const userMessage = {
-        id: Date.now(),
-        content: newMessage,
-        created_at: new Date().toISOString(),
-        task_answer: null
-    };
-    setMessages(prevMessages => {
-        const updatedMessages = [...prevMessages, userMessage];
-        localStorage.setItem(`messages-${taskId}`, JSON.stringify(updatedMessages)); 
-        return updatedMessages;
-    });
+        const token = localStorage.getItem('userToken');
+        if (!token) {
+            setError('User is not logged in.');
+            return;
+        }
 
-    try {
-        const currentMessage = messages[currentBlueMessageIndex!];
-        const correctAnswer = currentMessage?.task_answer?.toLowerCase();
+        const userMessage = {
+            id: Date.now(),
+            content: newMessage,
+            created_at: new Date().toISOString(),
+            task_answer: null
+        };
+        setMessages(prevMessages => {
+            const updatedMessages = [...prevMessages, userMessage];
+            localStorage.setItem(`messages-${taskId}`, JSON.stringify(updatedMessages));
+            return updatedMessages;
+        });
 
-        // Check if the answer is correct
-        if (correctAnswer && correctAnswer === newMessage.toLowerCase()) {
-            setIsAnswerCorrect(true);  // Answer is correct
-            setIsChatInputVisible(false);  // Hide chat input permanently
+        try {
+            const currentMessage = messages[currentBlueMessageIndex!];
+            const correctAnswer = currentMessage?.task_answer?.toLowerCase();
 
-            const feedbackMessage = {
-                id: Date.now() + 1,
-                content: "Correct answer!",
-                created_at: new Date().toISOString(),
-                task_answer: null
-            };
-            setMessages(prevMessages => {
-                const updatedMessages = [...prevMessages, feedbackMessage];
-                localStorage.setItem(`messages-${taskId}`, JSON.stringify(updatedMessages)); 
-                return updatedMessages;
-            });
-
-            // After posting "Correct answer!", hide the chat input
-            setNewMessage(''); 
-
-            // Check if the correct answer message has been added
-            setTimeout(() => {
-                // Re-check the latest messages to see if "Correct answer!" was added
-                const lastMessage = messages[messages.length - 1];
-                if (lastMessage?.content === "Correct answer!") {
-                    setIsChatInputVisible(false);
+            if (correctAnswer && correctAnswer === newMessage.toLowerCase()) {
+                const response = await api.get('http://127.0.0.1:8000/api/addPoint', {
+                    headers: { Authorization: `Bearer ${token}` }
+                });
+                if (response.status) {
+                    console.log('Point added:', response.data);
+                } else {
+                    setError('Failed to add point');
                 }
-            }, 500);  // Small timeout to ensure message is added before check
+                setIsAnswerCorrect(true);
+                setIsChatInputVisible(false);
 
-            api.post('/api/markMessageAsSolved', { id: currentMessage.id }, {
-                headers: { Authorization: `Bearer ${token}` }
-            })
-            .then(() => {
-                setSolvedMessageIds(prev => new Set(prev).add(currentMessage.id));
-                setMessages(prevMessages =>
-                    prevMessages.map(msg =>
-                        msg.id === currentMessage.id ? { ...msg, solved: true } : msg
-                    )
-                );
-
-                // Save updated messages to localStorage after state update
+                const feedbackMessage = {
+                    id: Date.now() + 1,
+                    content: "Correct answer!",
+                    created_at: new Date().toISOString(),
+                    task_answer: null
+                };
                 setMessages(prevMessages => {
-                    const updatedMessages = prevMessages;
+                    const updatedMessages = [...prevMessages, feedbackMessage];
                     localStorage.setItem(`messages-${taskId}`, JSON.stringify(updatedMessages));
                     return updatedMessages;
                 });
 
-                const blueMessages = messages.filter(msg => msg.task_answer && !solvedMessageIds.has(msg.id));
-                if (blueMessages.length > 0) {
-                    const nextBlueIndex = messages.findIndex(msg => msg.id === blueMessages[0].id);
-                    setCurrentBlueMessageIndex(nextBlueIndex);
-                } else {
-                    setCurrentBlueMessageIndex(null);
-                    const finalMessage = {
-                        id: Date.now() + 2,
-                        content: "Congratulations! You have solved all tasks.",
-                        created_at: new Date().toISOString(),
-                        task_answer: null
-                    };
-                    setMessages(prevMessages => {
-                        const updatedMessages = [...prevMessages, finalMessage];
-                        localStorage.setItem(`messages-${taskId}`, JSON.stringify(updatedMessages)); 
-                        return updatedMessages;
-                    });
-                }
-            })
-            .catch(error => {
-                console.error('Failed to mark message as solved:', error);
-                setError('Failed to mark message as solved.');
-            });
-        } else {
-            const feedbackMessage = {
-                id: Date.now() + 1,
-                content: "Incorrect answer. Try again.",
-                created_at: new Date().toISOString(),
-                task_answer: null
-            };
-            setMessages(prevMessages => {
-                const updatedMessages = [...prevMessages, feedbackMessage];
-                localStorage.setItem(`messages-${taskId}`, JSON.stringify(updatedMessages));
-                return updatedMessages;
-            });
-            setNewMessage('');
-        }
-    } catch (error) {
-        console.error('Posting message failed:', error);
-        setError('Failed to post message.');
-    }
-};
+                api.post('/api/markMessageAsSolved', { id: currentMessage.id }, {
+                    headers: { Authorization: `Bearer ${token}` }
+                }).then(() => {
+                    setSolvedMessageIds(prev => new Set(prev).add(currentMessage.id));
+                    setMessages(prevMessages =>
+                        prevMessages.map(msg =>
+                            msg.id === currentMessage.id ? { ...msg, solved: true } : msg
+                        )
+                    );
 
+                    const blueMessages = messages.filter(msg => msg.task_answer && !solvedMessageIds.has(msg.id));
+                    if (blueMessages.length > 0) {
+                        const nextBlueIndex = messages.findIndex(msg => msg.id === blueMessages[0].id);
+                        setCurrentBlueMessageIndex(nextBlueIndex);
+                    } else {
+                        setCurrentBlueMessageIndex(null);
+                        const finalMessage = {
+                            id: Date.now() + 2,
+                            content: "Congratulations! You have solved all tasks.",
+                            created_at: new Date().toISOString(),
+                            task_answer: null
+                        };
+                        setMessages(prevMessages => {
+                            const updatedMessages = [...prevMessages, finalMessage];
+                            localStorage.setItem(`messages-${taskId}`, JSON.stringify(updatedMessages));
+                            return updatedMessages;
+                        });
+                    }
+                });
+            } else {
+                const feedbackMessage = {
+                    id: Date.now() + 1,
+                    content: "Incorrect answer. Try again.",
+                    created_at: new Date().toISOString(),
+                    task_answer: null
+                };
+                setMessages(prevMessages => {
+                    const updatedMessages = [...prevMessages, feedbackMessage];
+                    localStorage.setItem(`messages-${taskId}`, JSON.stringify(updatedMessages));
+                    return updatedMessages;
+                });
+            }
+            setNewMessage('');
+        } catch (error) {
+            console.error('Posting message failed:', error);
+            setError('Failed to post message.');
+        }
+    };
 
     useEffect(() => {
-        printMessages();
+        fetchMessages();
+
+        const interval = setInterval(() => {
+            fetchMessages();
+        }, 100); // Refresh every 0.1 seconds
+
+        return () => clearInterval(interval);
     }, [taskId]);
 
     const handleKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
@@ -212,7 +196,7 @@ const postMessage = async () => {
     return (
         <main id="logs" className="bg-main-red h-screen w-screen flex flex-col items-center justify-center">
             <div id="back-area" className="bg-white text-white h-[10%] w-[100%] flex border-b-[5px] border-black">
-                <a href="/messages" id='back-poga' className="bg-white h-[80%] w-[10%] flex ml-[5%] mt-[0.5%] cursor-pointer items-center justify-center border-black border-1px">
+                <a href="/messages" id="back-poga" className="bg-white h-[80%] w-[10%] flex ml-[5%] mt-[0.5%] cursor-pointer items-center justify-center border-black border-1px">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="black" className="size-6">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M6.75 15.75 3 12m0 0 3.75-3.75M3 12h18" />
                     </svg>
@@ -242,7 +226,6 @@ const postMessage = async () => {
                 </div>
             </div>
 
-            {/* Chat input is visible only if the answer is not correct */}
             {isChatInputVisible && !isAnswerCorrect && (
                 <div id="input-area" className="flex bg-white items-center justify-center">
                     <input

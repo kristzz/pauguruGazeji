@@ -12,12 +12,32 @@ use App\Models\Tasks;
 use App\Models\Message;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
+use App\Models\AboutUser;
 
 class SubjectController extends Controller
 {
-    /**
-     * Store a newly created subject in storage.
-     */
+    public function addPoint()
+    {
+        $user = Auth::user();
+
+        if (!$user) {
+            return response()->json(['message' => 'User not authenticated.'], 401);
+        }
+
+        $aboutUser = AboutUser::where('user_id', $user->id)->first();
+
+        if (!$aboutUser) {
+            return response()->json(['message' => 'AboutUser entry not found.'], 404);
+        }
+
+        $aboutUser->increment('points');
+
+        return response()->json([
+            'message' => 'Point added successfully.',
+            'points' => $aboutUser->points,
+        ]);
+    }
+
     public function createSubject(Request $request): JsonResponse
     {
         $request->validate([
