@@ -1,43 +1,100 @@
+'use client';
+
+import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 
 export default function Home() {
+  const contentSteps = [
+    {
+      text: "Input your email and password",
+      imageSrc: "/images/register.png",
+      altText: "Register"
+    },
+    {
+      text: "Input your details",
+      imageSrc: "/images/aboutyou.png",
+      altText: "About You"
+    },
+    {
+      text: "Customize your learning experience",
+      imageSrc: "/images/customize.png",
+      altText: "Customize"
+    },
+    {
+      text: "Start your first lesson!",
+      imageSrc: "/images/lesson.png",
+      altText: "Lesson Start"
+    },
+  ];
+
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  const handleNext = () => {
+    setCurrentIndex((prevIndex) => (prevIndex + 1) % contentSteps.length);
+  };
+
+  const handlePrevious = () => {
+    setCurrentIndex((prevIndex) =>
+      prevIndex === 0 ? contentSteps.length - 1 : prevIndex - 1
+    );
+  };
+
+  const currentContent = contentSteps[currentIndex];
+
   return (
-    <main>
+    <main className="bg-gray-50 min-h-screen flex flex-col items-center">
+      <div className="text-center mt-12 mb-16 px-4">
+        <h1 className="text-main-blue font-bold text-5xl sm:text-6xl lg:text-7xl">
+          Think Abt It
+        </h1>
+      </div>
 
-      {/* 
-      <h1>pauguru gazeji</h1>
-      <h2 className="bg-main-blue">blue</h2>    
-      <h2 className="bg-main-white">white</h2>
-      <h2 className="bg-main-red">red</h2> */}
-
-      <div className="flex flex-col items-center h-screen">
-
-        <div className="flex flex-row">
-          <div className=" bg-main-red w-60 h-16 rounded-b-xl z-0
-                          sm:w-72 sm:h-24
-                          xl:w-[600px]"></div>
-          <div className="absolute bg-main-blue w-14 h-60 rounded-s-xl right-0 top-64
-                          sm:w-24 sm:h-72"></div>
-          <div className="absolute bg-main-blue w-16 h-36 rounded-e-xl left-0 top-52
-                          sm:w-20 sm:h-64
-                          xl:top-40"></div>
-          <div className="absolute bg-main-red w-8 h-32 rounded-e-xl left-0 bottom-36
-                          sm:w-16 sm:h-40 sm:bottom-44
-                          xl:bottom-32"></div>
-          <div className="absolute bg-main-blue w-40 h-16 rounded-tr-xl bottom-0 left-0
-                          sm:w-48 sm:h-20"></div>
-          <div className="absolute bg-main-red w-32 h-24 rounded-tl-xl bottom-0 right-0
-                          sm:w-40 sm:h-32"></div>
+      <div className="flex flex-col md:flex-row items-center md:justify-center w-full px-4 md:px-0">
+        <div className="flex flex-col items-center w-full md:w-1/2 mb-8 md:mb-0">
+          <h2 className="text-main-blue font-semibold text-2xl text-center mb-6 md:text-3xl">
+            Start your learning journey today!
+          </h2>
+          <div className="flex items-center justify-center mb-8 md:mb-0">
+            <button
+              onClick={handlePrevious}
+              className="bg-main-blue text-white p-2 rounded-lg shadow-md mr-4 hover:bg-blue-700 transition duration-300"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6">
+                <path strokeLinecap="round" strokeLinejoin="round" d="m18.75 4.5-7.5 7.5 7.5 7.5m-6-15L5.25 12l7.5 7.5" />
+              </svg>
+            </button>
+            <div className="bg-white shadow-lg rounded-lg p-6 flex flex-col items-center w-72 sm:w-80 md:w-96">
+              <p className="text-main-blue font-medium text-center mb-4 text-lg">
+                {currentContent.text}
+              </p>
+              <Image src={currentContent.imageSrc} alt={currentContent.altText} width={280} height={300} className="rounded-lg" />
+            </div>
+            <button
+              onClick={handleNext}
+              className="bg-main-blue text-white p-2 rounded-lg shadow-md ml-4 hover:bg-blue-700 transition duration-300"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6">
+                <path strokeLinecap="round" strokeLinejoin="round" d="m5.25 4.5 7.5 7.5-7.5 7.5m6-15 7.5 7.5-7.5 7.5" />
+              </svg>
+            </button>
+          </div>
         </div>
 
-        <h1 className="text-main-blue text-2xl text-center w-[50%] mt-12 mb-36 z-1
-                      sm:mt-56 sm:text-4xl
-                      xl:mt-36" >Start your learning journey today!</h1>
-        <Link href="/register"><button className="bg-main-blue text-main-white text-lg rounded-lg h-12 w-40 my-4
-                                                  sm:w-60 sm:h-16 sm:text-xl">Register</button></Link>
-        <Link href="/login"><button className="bg-main-red text-main-white text-lg rounded-lg h-12 w-40 my-4
-                                                  sm:w-60 sm:h-16 sm:text-xl">Sign In</button></Link>
+        <div className="flex flex-col items-center w-full md:w-1/2 mt-8 md:mt-0">
+          <div className="flex flex-col items-center w-full sm:w-3/4 lg:w-1/2 space-y-4">
+            <Link href="/register">
+              <button className="bg-main-blue text-white text-lg font-semibold rounded-lg h-12 w-48 shadow-md hover:bg-blue-700 transition duration-300">
+                Reģister
+              </button>
+            </Link>
+            <Link href="/login">
+              <button className="bg-main-red text-white text-lg font-semibold rounded-lg h-12 w-48 shadow-md hover:bg-red-700 transition duration-300">
+                Log In
+              </button>
+            </Link>
+          </div>
+        </div>
       </div>
     </main>
   );
