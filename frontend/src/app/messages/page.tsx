@@ -41,16 +41,12 @@ export default function Messages() {
             const response = await api.get('http://127.0.0.1:8000/api/getUserMessages', {
                 headers: { Authorization: `Bearer ${token}` }
             });
-            console.log(response.data);
             if (response.status) {
-                console.log('Got the messages');
                 setMessages(response.data);
             } else {
-                console.log('Got to this part');
                 setError('Failed to load messages.');
             }
         } catch (err: any) {
-            console.log('This error');
             setError(err.response?.data?.message || 'Failed to load messages.');
         } finally {
             setLoading(false);
@@ -59,10 +55,10 @@ export default function Messages() {
 
     useEffect(() => {
         fetchMessages();
+
     }, []);
 
     const handleTaskClick = (taskId: string) => {
-        // Redirecting to chat with the specific taskId
         router.push(`/chat?task_id=${encodeURIComponent(taskId)}`);
     };
 
@@ -117,7 +113,7 @@ export default function Messages() {
                                             <li 
                                                 key={message.id} 
                                                 className="flex items-start p-2 border rounded cursor-pointer hover:bg-gray-100"
-                                                onClick={() => handleTaskClick(message.task_id)} // Updated to call handleTaskClick
+                                                onClick={() => handleTaskClick(message.task_id)}
                                             >
                                                 <img
                                                     src={`https://via.placeholder.com/50?text=${subject.charAt(0)}`}
